@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.apache.poi:poi:4.1.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/apache/poi/poi/4.1.1/poi-4.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/apache/poi/poi/4.1.1/poi-4.1.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/apache/poi/poi/4.1.1/poi-4.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

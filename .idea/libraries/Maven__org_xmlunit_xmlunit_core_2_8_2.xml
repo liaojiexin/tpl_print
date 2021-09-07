@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.xmlunit:xmlunit-core:2.8.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/xmlunit/xmlunit-core/2.8.2/xmlunit-core-2.8.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/xmlunit/xmlunit-core/2.8.2/xmlunit-core-2.8.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/xmlunit/xmlunit-core/2.8.2/xmlunit-core-2.8.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
