@@ -8,6 +8,15 @@
         <version>2.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+    <modules>
+        <module>controller</module>
+        <module>base</module>
+        <module>dao</module>
+        <module>service</module>
+    </modules>
+
+    <packaging>pom</packaging>
     <groupId>com.example</groupId>
     <artifactId>tpl_print</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -16,6 +25,7 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
