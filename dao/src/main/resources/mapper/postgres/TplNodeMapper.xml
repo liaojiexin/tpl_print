@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.dao.mapper.TplNodeMapper" >
+  <resultMap id="BaseResultMap" type="com.example.base.pojo.TplNode" >
+    <id column="tplid" property="tplid" jdbcType="VARCHAR" />
+    <result column="tplname" property="tplname" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="tpltype" property="tpltype" jdbcType="VARCHAR" />
+    <result column="isFile" property="isfile" jdbcType="BIT" />
+    <result column="parentid" property="parentid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tplid, tplname, createtime, updatetime, tpltype, isFile, parentid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tpl_node
+    where tplid = #{tplid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tpl_node
+    where tplid = #{tplid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.example.base.pojo.TplNode" >
+    insert into tpl_node (tplid, tplname, createtime, 
+      updatetime, tpltype, isFile, 
+      parentid)
+    values (#{tplid,jdbcType=VARCHAR}, #{tplname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{tpltype,jdbcType=VARCHAR}, #{isfile,jdbcType=BIT}, 
+      #{parentid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.base.pojo.TplNode" >
+    insert into tpl_node
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tplid != null" >
+        tplid,
+      </if>
+      <if test="tplname != null" >
+        tplname,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="tpltype != null" >
+        tpltype,
+      </if>
+      <if test="isfile != null" >
+        isFile,
+      </if>
+      <if test="parentid != null" >
+        parentid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tplid != null" >
+        #{tplid,jdbcType=VARCHAR},
+      </if>
+      <if test="tplname != null" >
+        #{tplname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tpltype != null" >
+        #{tpltype,jdbcType=VARCHAR},
+      </if>
+      <if test="isfile != null" >
+        #{isfile,jdbcType=BIT},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.base.pojo.TplNode" >
+    update tpl_node
+    <set >
+      <if test="tplname != null" >
+        tplname = #{tplname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tpltype != null" >
+        tpltype = #{tpltype,jdbcType=VARCHAR},
+      </if>
+      <if test="isfile != null" >
+        isFile = #{isfile,jdbcType=BIT},
+      </if>
+      <if test="parentid != null" >
+        parentid = #{parentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tplid = #{tplid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.base.pojo.TplNode" >
+    update tpl_node
+    set tplname = #{tplname,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      tpltype = #{tpltype,jdbcType=VARCHAR},
+      isFile = #{isfile,jdbcType=BIT},
+      parentid = #{parentid,jdbcType=VARCHAR}
+    where tplid = #{tplid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -7,5 +7,3 @@ spring:
     url: jdbc:postgresql://172.26.40.160:5432/postgres
     username: postgres
     password: Chinadci.07
-
-    
