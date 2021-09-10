@@ -20,6 +20,18 @@ public class TplNodeServiceImpl implements TplNodeService {
     @Autowired
     private TplNodeMapper tplNodeMapper;
 
+    //删除文件
+    public void removeFile(TplNode tplNode){
+        File file=new File(tplNode.getFilepath());
+        if (file.exists())
+            file.delete();  //删除原文件
+
+        String pdfFilePath=tplNode.getFilepath().substring(0,tplNode.getFilepath().lastIndexOf("."))+".pdf";
+        File pdfFile=new File(pdfFilePath);
+        if (pdfFile.exists())
+            pdfFile.delete();   //删除pdf文件
+    }
+
     @Override
     public Boolean uploadTplFile(String filepath, MultipartFile file, TplNode tplNode) {
         String originalFilename = file.getOriginalFilename();
@@ -57,17 +69,13 @@ public class TplNodeServiceImpl implements TplNodeService {
     public void removeTplFile(String filepath,TplNode tplNode) {
         TplNode tpl=tplNodeMapper.selectByPrimaryKey(tplNode.getTplid());
         if (tplNodeMapper.deleteByPrimaryKey(tplNode.getTplid())==1){   //删除数据库成功
-            File file=new File(tpl.getFilepath());
-            file.delete();  //删除原文件
-
-            String pdfFilePath=tpl.getFilepath().substring(0,tpl.getFilepath().lastIndexOf("."))+".pdf";
-            File pdfFile=new File(pdfFilePath);
-            pdfFile.delete();   //删除pdf文件
+            removeFile(tpl);
         }
     }
 
     @Override
     public Boolean updateTplFile(String filepath, TplNode tplNode, MultipartFile file) {
+        tplNode=tplNodeMapper.selectByPrimaryKey(tplNode.getTplid());
         if (file!=null && !file.isEmpty()){     //文件不为空，修改文件
             String originalFilename = file.getOriginalFilename();
             String fileName = tplNode.getTplid() + "-" + originalFilename;
@@ -81,11 +89,7 @@ public class TplNodeServiceImpl implements TplNodeService {
             }
             try {
                 //删除旧文件
-                File oldfile=new File(tplNode.getFilepath());
-                oldfile.delete();  //删除原文件
-                String pdfOldFilePath=tplNode.getFilepath().substring(0,tplNode.getFilepath().lastIndexOf("."))+".pdf";
-                File pdfFile=new File(pdfOldFilePath);
-                pdfFile.delete();   //删除pdf文件
+                removeFile(tplNode);
 
                 //转化为pdf文件
                 FileUtil.toPdfOfMultipartFile(file);
@@ -102,7 +106,9 @@ public class TplNodeServiceImpl implements TplNodeService {
             }
         }
         //修改数据库
-        tplNodeMapper.updateByPrimaryKeySelective(tplNode);
+        if (tplNodeMapper.updateByPrimaryKeySelective(tplNode)!=1){
+            return false;
+        }
         return true;
     }
 }
