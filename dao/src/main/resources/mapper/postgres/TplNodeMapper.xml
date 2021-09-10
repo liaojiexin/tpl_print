@@ -136,4 +136,9 @@
       filename = #{filename,jdbcType=VARCHAR}
     where tplid = #{tplid,jdbcType=VARCHAR}
   </update>
+  <select id="selectTplAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tpl_node
+  </select>
 </mapper>

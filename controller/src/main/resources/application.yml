@@ -22,4 +22,12 @@ mybatis:
   type-aliases-package: com.example.base.pojo
   mapper-locations: classpath*:mapper/postgres/*.xml
 
+#文件存储路径
 filepath: ${user.dir}\file
+
+#分页设置
+pagehelper:
+  helperDialect: postgresql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

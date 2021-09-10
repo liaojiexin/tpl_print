@@ -1,18 +1,19 @@
 package com.example.service.tpl.impl;
 
+import com.example.base.pojo.PageParam;
 import com.example.base.pojo.TplNode;
 import com.example.base.utils.FileUtil;
 import com.example.base.utils.SnowflakeIdWorker;
 import com.example.dao.mapper.TplNodeMapper;
 import com.example.service.tpl.def.TplNodeService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.List;
 
 @Service
 public class TplNodeServiceImpl implements TplNodeService {
@@ -110,5 +111,15 @@ public class TplNodeServiceImpl implements TplNodeService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public PageParam selectTplAll(PageParam pageParam) {
+        PageHelper.startPage(pageParam.getPageNum(), pageParam.getPageSize(),true);
+        List<TplNode> list=tplNodeMapper.selectTplAll();
+        PageInfo pageInfo=new PageInfo(list);
+        pageParam.setContent(pageInfo.getList());
+        pageParam.setAllNum(pageInfo.getTotal());
+        return pageParam;
     }
 }

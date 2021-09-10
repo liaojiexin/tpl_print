@@ -3,6 +3,8 @@ package com.example.dao.mapper;
 import com.example.base.pojo.TplNode;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 public interface TplNodeMapper {
     int deleteByPrimaryKey(String tplid);
 
@@ -15,4 +17,6 @@ public interface TplNodeMapper {
     int updateByPrimaryKeySelective(TplNode record);
 
     int updateByPrimaryKey(TplNode record);
+
+    List<TplNode> selectTplAll();
 }

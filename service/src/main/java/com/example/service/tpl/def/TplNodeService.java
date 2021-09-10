@@ -1,5 +1,6 @@
 package com.example.service.tpl.def;
 
+import com.example.base.pojo.PageParam;
 import com.example.base.pojo.TplNode;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,4 +11,6 @@ public interface TplNodeService {
     void removeTplFile(String filepath,TplNode tplNode);
 
     Boolean updateTplFile(String filepath, TplNode tplNode, MultipartFile file);
+
+    PageParam selectTplAll(PageParam pageParam);
 }
