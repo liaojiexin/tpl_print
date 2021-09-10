@@ -10,9 +10,10 @@
     <result column="isfile" property="isfile" jdbcType="BIT" />
     <result column="parentid" property="parentid" jdbcType="VARCHAR" />
     <result column="filepath" property="filepath" jdbcType="VARCHAR" />
+    <result column="filename" property="filename" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    tplid, tplname, createtime, updatetime, tpltype, isfile, parentid , filepath
+    tplid, tplname, createtime, updatetime, tpltype, isfile, parentid , filepath ,filename
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -27,10 +28,10 @@
   <insert id="insert" parameterType="com.example.base.pojo.TplNode" >
     insert into tpl_node (tplid, tplname, createtime, 
       updatetime, tpltype, isfile,
-      parentid,filepath)
+      parentid,filepath,filename)
     values (#{tplid,jdbcType=VARCHAR}, #{tplname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
       #{updatetime,jdbcType=TIMESTAMP}, #{tpltype,jdbcType=VARCHAR}, #{isfile,jdbcType=BIT}, 
-      #{parentid,jdbcType=VARCHAR},#{filepath,jdbcType=VARCHAR})
+      #{parentid,jdbcType=VARCHAR},#{filepath,jdbcType=VARCHAR},#{filename,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.example.base.pojo.TplNode" >
     insert into tpl_node
@@ -59,6 +60,9 @@
       <if test="filepath != null" >
         filepath,
       </if>
+      <if test="filename != null" >
+        filename,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tplid != null" >
@@ -84,6 +88,9 @@
       </if>
       <if test="filepath != null" >
         #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -111,6 +118,9 @@
       <if test="filepath != null" >
         filepath = #{filepath,jdbcType=VARCHAR},
       </if>
+      <if test="filename != null" >
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
     </set>
     where tplid = #{tplid,jdbcType=VARCHAR}
   </update>
@@ -122,7 +132,8 @@
       tpltype = #{tpltype,jdbcType=VARCHAR},
       isfile = #{isfile,jdbcType=BIT},
       parentid = #{parentid,jdbcType=VARCHAR},
-      filepath = #{filepath,jdbcType=VARCHAR}
+      filepath = #{filepath,jdbcType=VARCHAR},
+      filename = #{filename,jdbcType=VARCHAR}
     where tplid = #{tplid,jdbcType=VARCHAR}
   </update>
 </mapper>

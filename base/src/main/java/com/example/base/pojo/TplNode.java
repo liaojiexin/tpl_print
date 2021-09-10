@@ -19,6 +19,8 @@ public class TplNode {
     private String parentid;
     //文件存储位置
     private String filepath;
+    //文件名称
+    private String filename;
 
     public String getTplid() {
         return tplid;
@@ -82,6 +84,14 @@ public class TplNode {
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     @Override
