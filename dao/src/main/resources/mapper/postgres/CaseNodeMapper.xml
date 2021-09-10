@@ -6,12 +6,12 @@
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="tplid" property="tplid" jdbcType="VARCHAR" />
-    <result column="isFile" property="isfile" jdbcType="BIT" />
+    <result column="isfile" property="isfile" jdbcType="BIT" />
     <result column="parentid" property="parentid" jdbcType="VARCHAR" />
     <result column="filecontent" property="filecontent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    caseid, createtime, updatetime, tplid, isFile, parentid, filecontent
+    caseid, createtime, updatetime, tplid, isfile, parentid, filecontent
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -25,7 +25,7 @@
   </delete>
   <insert id="insert" parameterType="com.example.base.pojo.CaseNode" >
     insert into case_node (caseid, createtime, updatetime, 
-      tplid, isFile, parentid, 
+      tplid, isfile, parentid,
       filecontent)
     values (#{caseid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
       #{tplid,jdbcType=VARCHAR}, #{isfile,jdbcType=BIT}, #{parentid,jdbcType=VARCHAR}, 
@@ -47,7 +47,7 @@
         tplid,
       </if>
       <if test="isfile != null" >
-        isFile,
+        isfile,
       </if>
       <if test="parentid != null" >
         parentid,
@@ -93,7 +93,7 @@
         tplid = #{tplid,jdbcType=VARCHAR},
       </if>
       <if test="isfile != null" >
-        isFile = #{isfile,jdbcType=BIT},
+        isfile = #{isfile,jdbcType=BIT},
       </if>
       <if test="parentid != null" >
         parentid = #{parentid,jdbcType=VARCHAR},
@@ -109,7 +109,7 @@
     set createtime = #{createtime,jdbcType=TIMESTAMP},
       updatetime = #{updatetime,jdbcType=TIMESTAMP},
       tplid = #{tplid,jdbcType=VARCHAR},
-      isFile = #{isfile,jdbcType=BIT},
+      isfile = #{isfile,jdbcType=BIT},
       parentid = #{parentid,jdbcType=VARCHAR},
       filecontent = #{filecontent,jdbcType=VARCHAR}
     where caseid = #{caseid,jdbcType=VARCHAR}

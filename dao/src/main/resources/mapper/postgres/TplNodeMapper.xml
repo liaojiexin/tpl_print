@@ -7,11 +7,12 @@
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="tpltype" property="tpltype" jdbcType="VARCHAR" />
-    <result column="isFile" property="isfile" jdbcType="BIT" />
+    <result column="isfile" property="isfile" jdbcType="BIT" />
     <result column="parentid" property="parentid" jdbcType="VARCHAR" />
+    <result column="filepath" property="filepath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    tplid, tplname, createtime, updatetime, tpltype, isFile, parentid
+    tplid, tplname, createtime, updatetime, tpltype, isfile, parentid , filepath
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -25,11 +26,11 @@
   </delete>
   <insert id="insert" parameterType="com.example.base.pojo.TplNode" >
     insert into tpl_node (tplid, tplname, createtime, 
-      updatetime, tpltype, isFile, 
-      parentid)
+      updatetime, tpltype, isfile,
+      parentid,filepath)
     values (#{tplid,jdbcType=VARCHAR}, #{tplname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
       #{updatetime,jdbcType=TIMESTAMP}, #{tpltype,jdbcType=VARCHAR}, #{isfile,jdbcType=BIT}, 
-      #{parentid,jdbcType=VARCHAR})
+      #{parentid,jdbcType=VARCHAR},#{filepath,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.example.base.pojo.TplNode" >
     insert into tpl_node
@@ -50,10 +51,13 @@
         tpltype,
       </if>
       <if test="isfile != null" >
-        isFile,
+        isfile,
       </if>
       <if test="parentid != null" >
         parentid,
+      </if>
+      <if test="filepath != null" >
+        filepath,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -78,6 +82,9 @@
       <if test="parentid != null" >
         #{parentid,jdbcType=VARCHAR},
       </if>
+      <if test="filepath != null" >
+        #{filepath,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.example.base.pojo.TplNode" >
@@ -96,10 +103,13 @@
         tpltype = #{tpltype,jdbcType=VARCHAR},
       </if>
       <if test="isfile != null" >
-        isFile = #{isfile,jdbcType=BIT},
+        isfile = #{isfile,jdbcType=BIT},
       </if>
       <if test="parentid != null" >
         parentid = #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null" >
+        filepath = #{filepath,jdbcType=VARCHAR},
       </if>
     </set>
     where tplid = #{tplid,jdbcType=VARCHAR}
@@ -110,8 +120,9 @@
       createtime = #{createtime,jdbcType=TIMESTAMP},
       updatetime = #{updatetime,jdbcType=TIMESTAMP},
       tpltype = #{tpltype,jdbcType=VARCHAR},
-      isFile = #{isfile,jdbcType=BIT},
-      parentid = #{parentid,jdbcType=VARCHAR}
+      isfile = #{isfile,jdbcType=BIT},
+      parentid = #{parentid,jdbcType=VARCHAR},
+      filepath = #{filepath,jdbcType=VARCHAR}
     where tplid = #{tplid,jdbcType=VARCHAR}
   </update>
 </mapper>

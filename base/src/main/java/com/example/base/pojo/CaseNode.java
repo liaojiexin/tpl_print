@@ -73,4 +73,17 @@ public class CaseNode {
     public void setFilecontent(String filecontent) {
         this.filecontent = filecontent == null ? null : filecontent.trim();
     }
+
+    @Override
+    public String toString() {
+        return "CaseNode{" +
+                "caseid='" + caseid + '\'' +
+                ", createtime=" + createtime +
+                ", updatetime=" + updatetime +
+                ", tplid='" + tplid + '\'' +
+                ", isfile=" + isfile +
+                ", parentid='" + parentid + '\'' +
+                ", filecontent='" + filecontent + '\'' +
+                '}';
+    }
 }

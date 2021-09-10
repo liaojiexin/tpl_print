@@ -17,6 +17,8 @@ public class TplNode {
     private Boolean isfile;
     //父级id
     private String parentid;
+    //文件存储位置
+    private String filepath;
 
     public String getTplid() {
         return tplid;
@@ -72,5 +74,26 @@ public class TplNode {
 
     public void setParentid(String parentid) {
         this.parentid = parentid == null ? null : parentid.trim();
+    }
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
+
+    @Override
+    public String toString() {
+        return "TplNode{" +
+                "tplid='" + tplid + '\'' +
+                ", tplname='" + tplname + '\'' +
+                ", createtime=" + createtime +
+                ", updatetime=" + updatetime +
+                ", tpltype='" + tpltype + '\'' +
+                ", isfile=" + isfile +
+                ", parentid='" + parentid + '\'' +
+                '}';
     }
 }
