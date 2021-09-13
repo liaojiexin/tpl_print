@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScans;
 
 // 配置 spring 扫描的包
 @MapperScan(value = "com.example.dao.mapper")
-@SpringBootApplication(scanBasePackages="com.example")
+@SpringBootApplication(scanBasePackages={"com.example"})
 public class TplPrintApplication {
 
     public static void main(String[] args) {

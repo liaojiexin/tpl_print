@@ -41,6 +41,24 @@
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.10.0" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.aspose:aspose-words:20.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/aspose-words-20.4-jdk17.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.aspose:aspose-cells:20.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/aspose-cells-20.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: com.itextpdf:itextpdf:5.5.13" level="project" />
     <orderEntry type="library" name="Maven: cn.afterturn:easypoi-spring-boot-starter:4.3.0" level="project" />
     <orderEntry type="library" name="Maven: cn.afterturn:easypoi-base:4.3.0" level="project" />

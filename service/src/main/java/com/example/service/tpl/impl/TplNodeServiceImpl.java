@@ -48,18 +48,18 @@ public class TplNodeServiceImpl implements TplNodeService {
             dest.getParentFile().mkdir();
         }
         try {
-            //转化为pdf文件
-            FileUtil.toPdfOfMultipartFile(file);
-
-            //上传文件
-            file.transferTo(dest); //文件写入
-
             //数据存入数据库
-            tplNode.setTplid(String.valueOf(idWorker.nextId()));
+            tplNode.setTplid(tplid);
             tplNode.setTpltype(file.getContentType());
             tplNode.setFilepath(path);
             tplNode.setFilename(originalFilename);
             tplNodeMapper.insertSelective(tplNode);
+
+            //转化为pdf文件
+            FileUtil.toPdfOfMultipartFile(file,filepath,tplNode);
+
+            //上传文件
+            file.transferTo(dest); //文件写入
         } catch (IOException e) {
             return false;
         }
@@ -89,19 +89,19 @@ public class TplNodeServiceImpl implements TplNodeService {
                 dest.getParentFile().mkdir();
             }
             try {
-                //删除旧文件
-                removeFile(tplNode);
-
-                //转化为pdf文件
-                FileUtil.toPdfOfMultipartFile(file);
-
-                //上传文件
-                file.transferTo(dest);
-
                 //修改信息
                 tplNode.setTpltype(file.getContentType());
                 tplNode.setFilepath(path);
                 tplNode.setFilename(originalFilename);
+
+                //删除旧文件
+                removeFile(tplNode);
+
+                //转化为pdf文件
+//                FileUtil.toPdfOfMultipartFile(file);
+
+                //上传文件
+                file.transferTo(dest);
             } catch (IOException e) {
                 return false;
             }
@@ -115,11 +115,15 @@ public class TplNodeServiceImpl implements TplNodeService {
 
     @Override
     public PageParam selectTplAll(PageParam pageParam) {
-        PageHelper.startPage(pageParam.getPageNum(), pageParam.getPageSize(),true);
-        List<TplNode> list=tplNodeMapper.selectTplAll();
-        PageInfo pageInfo=new PageInfo(list);
-        pageParam.setContent(pageInfo.getList());
-        pageParam.setAllNum(pageInfo.getTotal());
-        return pageParam;
+        try{
+            PageHelper.startPage(pageParam.getPageNum(), pageParam.getPageSize(),true);
+            List<TplNode> list=tplNodeMapper.selectTplAll();
+            PageInfo pageInfo=new PageInfo(list);
+            pageParam.setContent(pageInfo.getList());
+            pageParam.setAllNum(pageInfo.getTotal());
+            return pageParam;
+        }finally {
+            PageHelper.clearPage();
+        }
     }
 }

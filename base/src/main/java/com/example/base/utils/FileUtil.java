@@ -1,5 +1,6 @@
 package com.example.base.utils;
 
+import com.example.base.pojo.TplNode;
 import org.apache.tika.metadata.HttpHeaders;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -16,24 +17,20 @@ import java.io.InputStream;
 public class FileUtil {
 
     //判断文件格式来确定转化pdf的格式
-    public static void toPdfOfMultipartFile(MultipartFile file) {
+    public static void toPdfOfMultipartFile(MultipartFile file, String filepath, TplNode tplNode) {
         String fileType=file.getContentType();
         switch (fileType) {
-            case "application/vnd.ms-powerpoint":
-            case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-                break;
             case "application/msword":
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             case "text/plain":
             case "text/xml":
             case "application/xml":
             case "application/vnd.ms-works":
-                PdfUtil.wordToPdf(file);
+                PdfUtil.wordToPdf(file,filepath,tplNode);
                 break;
             case "application/vnd.ms-excel":
             case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                break;
-            case "image/vnd.dwg":
+                PdfUtil.excelToPdf(file,filepath,tplNode);
                 break;
             default:
                 break;
