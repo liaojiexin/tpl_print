@@ -3,6 +3,7 @@
 <mapper namespace="com.example.dao.mapper.CaseNodeMapper" >
   <resultMap id="BaseResultMap" type="com.example.base.pojo.CaseNode" >
     <id column="caseid" property="caseid" jdbcType="VARCHAR" />
+    <id column="casename" property="casename" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="tplid" property="tplid" jdbcType="VARCHAR" />
@@ -11,7 +12,7 @@
     <result column="filecontent" property="filecontent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    caseid, createtime, updatetime, tplid, isfile, parentid, filecontent
+    caseid, casename , createtime, updatetime, tplid, isfile, parentid, filecontent
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -24,10 +25,10 @@
     where caseid = #{caseid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.example.base.pojo.CaseNode" >
-    insert into case_node (caseid, createtime, updatetime, 
+    insert into case_node (caseid, casename , createtime, updatetime,
       tplid, isfile, parentid,
       filecontent)
-    values (#{caseid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
+    values (#{caseid,jdbcType=VARCHAR},#{casename,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP},
       #{tplid,jdbcType=VARCHAR}, #{isfile,jdbcType=BIT}, #{parentid,jdbcType=VARCHAR}, 
       #{filecontent,jdbcType=VARCHAR})
   </insert>
@@ -36,6 +37,9 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="caseid != null" >
         caseid,
+      </if>
+      <if test="casename != null" >
+        casename,
       </if>
       <if test="createtime != null" >
         createtime,
@@ -60,6 +64,9 @@
       <if test="caseid != null" >
         #{caseid,jdbcType=VARCHAR},
       </if>
+      <if test="casename != null" >
+        #{casename,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null" >
         #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -83,6 +90,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.example.base.pojo.CaseNode" >
     update case_node
     <set >
+      <if test="casename !=null">
+        casename = #{casename,jdbcType=VARCHAR}
+      </if>
       <if test="createtime != null" >
         createtime = #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -106,7 +116,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.base.pojo.CaseNode" >
     update case_node
-    set createtime = #{createtime,jdbcType=TIMESTAMP},
+    set casename = #{casename,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
       updatetime = #{updatetime,jdbcType=TIMESTAMP},
       tplid = #{tplid,jdbcType=VARCHAR},
       isfile = #{isfile,jdbcType=BIT},

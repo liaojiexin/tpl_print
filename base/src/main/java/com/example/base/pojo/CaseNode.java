@@ -5,6 +5,8 @@ import java.util.Date;
 public class CaseNode {
     //实例id
     private String caseid;
+    //实例名称
+    private String casename;
     //创建时间
     private Date createtime;
     //修改时间
@@ -24,6 +26,14 @@ public class CaseNode {
 
     public void setCaseid(String caseid) {
         this.caseid = caseid == null ? null : caseid.trim();
+    }
+
+    public String getCasename() {
+        return casename;
+    }
+
+    public void setCasename(String casename) {
+        this.casename = casename;
     }
 
     public Date getCreatetime() {
@@ -78,6 +88,7 @@ public class CaseNode {
     public String toString() {
         return "CaseNode{" +
                 "caseid='" + caseid + '\'' +
+                ", casename='" + casename + '\'' +
                 ", createtime=" + createtime +
                 ", updatetime=" + updatetime +
                 ", tplid='" + tplid + '\'' +
