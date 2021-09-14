@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class TplNodeServiceImpl implements TplNodeService {
     @Autowired
     private FileOperateService fileOperateService;
 
+    //上传模板
     @Override
     public Boolean uploadTplFile(String filepath, MultipartFile file, TplNode tplNode) {
         String originalFilename = file.getOriginalFilename();
@@ -64,6 +66,7 @@ public class TplNodeServiceImpl implements TplNodeService {
         return true;
     }
 
+    //删除模板
     @Override
     public void removeTplFile(String filepath,TplNode tplNode) {
         TplNode tpl=tplNodeMapper.selectByPrimaryKey(tplNode.getTplid());
@@ -72,6 +75,7 @@ public class TplNodeServiceImpl implements TplNodeService {
         }
     }
 
+    //修改模板
     @Override
     public Boolean updateTplFile(String filepath, TplNode tplNode, MultipartFile file) {
         tplNode=tplNodeMapper.selectByPrimaryKey(tplNode.getTplid());
@@ -111,6 +115,7 @@ public class TplNodeServiceImpl implements TplNodeService {
         return true;
     }
 
+    //查询模板
     @Override
     public PageParam selectTplAll(PageParam pageParam) {
         try{
@@ -125,6 +130,7 @@ public class TplNodeServiceImpl implements TplNodeService {
         }
     }
 
+    //预览模板
     @Override
     public Map<String,Object> previewPdf(HttpServletResponse response,String tplid ,String filepath) {
         Map<String,Object> result=new HashMap();
@@ -142,10 +148,11 @@ public class TplNodeServiceImpl implements TplNodeService {
                 outputStream.flush();
                 byte[] bytes=outputStream.toByteArray();
                 //请求头处理
-                response.setHeader("Content-type","application/pdf");
+                response.setContentType("application/pdf;charset=UTF-8");
                 String filename= tplNode.getFilename().substring(0,tplNode.getFilename().lastIndexOf("."))+".pdf";
+                filename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
                 response.setHeader("Content-Disposition", String.format("inline; filename=%s",filename));
-                response.setHeader("Content-Length", String.valueOf(bytes.length));
+                response.setContentLength(bytes.length);
                 result.put("response",response);
                 result.put("bytes",bytes);
                 result.put("result","success");
@@ -163,6 +170,37 @@ public class TplNodeServiceImpl implements TplNodeService {
             }
             result.put("result","convert");
             return result;
+        }
+    }
+
+    //下载文件
+    @Override
+    public void downloadTpl(HttpServletResponse response, String tplid) {
+        TplNode tplNode=tplNodeMapper.selectByPrimaryKey(tplid);
+        File file=new File(tplNode.getFilepath());
+        if (tplNode!=null && file.exists()){
+            try(InputStream inputStream=new FileInputStream(file);
+                    ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+                    OutputStream out=response.getOutputStream()){
+                byte[] buffer = new byte[1024];
+                int len=0;
+                while ((len=inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, len);
+                }
+                outputStream.flush();
+                byte[] bytes=outputStream.toByteArray();
+
+                String filename = URLEncoder.encode(tplNode.getFilename(), "UTF-8").replaceAll("\\+", "%20");
+
+                response.setHeader("Content-Disposition", String.format("attachment; filename=%s", filename));
+                response.setContentType("application/octet-stream;charset=UTF-8");
+                response.setContentLength(bytes.length);
+
+                out.write(bytes);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 }

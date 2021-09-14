@@ -114,4 +114,16 @@ public class TplNodeController {
 
     }
 
+
+    /**
+     * 下载模板文件
+     * @param response
+     * @param tplid
+     */
+    @RequestMapping(value = "/tplNode/downloadTpl",method = RequestMethod.POST)
+    public void downloadTpl(HttpServletResponse response,String tplid){
+        if (ObjectUtil.isExist(tplid)==true){
+            tplNodeService.downloadTpl(response,tplid);
+        }
+    }
 }

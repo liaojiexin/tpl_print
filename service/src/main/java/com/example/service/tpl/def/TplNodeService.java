@@ -17,4 +17,6 @@ public interface TplNodeService {
     PageParam selectTplAll(PageParam pageParam);
 
     Map<String,Object> previewPdf(HttpServletResponse response, String tplid ,String filepath);
+
+    void downloadTpl(HttpServletResponse response, String tplid);
 }
