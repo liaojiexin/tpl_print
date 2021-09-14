@@ -91,7 +91,7 @@
     update case_node
     <set >
       <if test="casename !=null">
-        casename = #{casename,jdbcType=VARCHAR}
+        casename = #{casename,jdbcType=VARCHAR},
       </if>
       <if test="createtime != null" >
         createtime = #{createtime,jdbcType=TIMESTAMP},
@@ -125,4 +125,9 @@
       filecontent = #{filecontent,jdbcType=VARCHAR}
     where caseid = #{caseid,jdbcType=VARCHAR}
   </update>
+  <select id="selectCaseAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from case_node
+  </select>
 </mapper>

@@ -68,7 +68,7 @@ public class TplNodeController {
      */
     @RequestMapping(value = "/tplNode/updateTplFile", method = RequestMethod.POST)
     public ResultBody updateTplFile(TplNode tplNode, MultipartFile file){
-        if (ObjectUtil.isExist(tplNode.getTplid())==false){
+        if (ObjectUtil.isExist(tplNode.getTplid(),tplNode.getUpdatetime())==false){
             return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
         }else {
             Boolean b = tplNodeService.updateTplFile(filepath,tplNode,file);
