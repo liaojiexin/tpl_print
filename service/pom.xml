@@ -52,6 +52,11 @@
             <systemPath>${project.basedir}/../lib/aspose-cells-20.4.jar</systemPath>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

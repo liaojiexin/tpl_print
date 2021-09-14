@@ -5,33 +5,31 @@ import com.example.base.pojo.TplNode;
 import com.example.base.utils.FileUtil;
 import com.example.base.utils.SnowflakeIdWorker;
 import com.example.dao.mapper.TplNodeMapper;
+import com.example.service.tpl.def.FileOperateService;
 import com.example.service.tpl.def.TplNodeService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@SuppressWarnings("ALL")
 @Service
 public class TplNodeServiceImpl implements TplNodeService {
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private TplNodeMapper tplNodeMapper;
 
-    //删除文件
-    public void removeFile(TplNode tplNode){
-        File file=new File(tplNode.getFilepath());
-        if (file.exists())
-            file.delete();  //删除原文件
-
-        String pdfFilePath=tplNode.getFilepath().substring(0,tplNode.getFilepath().lastIndexOf("."))+".pdf";
-        File pdfFile=new File(pdfFilePath);
-        if (pdfFile.exists())
-            pdfFile.delete();   //删除pdf文件
-    }
+    @Autowired
+    private FileOperateService fileOperateService;
 
     @Override
     public Boolean uploadTplFile(String filepath, MultipartFile file, TplNode tplNode) {
@@ -56,7 +54,7 @@ public class TplNodeServiceImpl implements TplNodeService {
             tplNodeMapper.insertSelective(tplNode);
 
             //转化为pdf文件
-            FileUtil.toPdfOfMultipartFile(file,filepath,tplNode);
+            fileOperateService.toPdfOfMultipartFile(file,filepath,tplNode);
 
             //上传文件
             file.transferTo(dest); //文件写入
@@ -70,7 +68,7 @@ public class TplNodeServiceImpl implements TplNodeService {
     public void removeTplFile(String filepath,TplNode tplNode) {
         TplNode tpl=tplNodeMapper.selectByPrimaryKey(tplNode.getTplid());
         if (tplNodeMapper.deleteByPrimaryKey(tplNode.getTplid())==1){   //删除数据库成功
-            removeFile(tpl);
+            fileOperateService.removeFile(tpl);
         }
     }
 
@@ -95,10 +93,10 @@ public class TplNodeServiceImpl implements TplNodeService {
                 tplNode.setFilename(originalFilename);
 
                 //删除旧文件
-                removeFile(tplNode);
+                fileOperateService.removeFile(tplNode);
 
                 //转化为pdf文件
-//                FileUtil.toPdfOfMultipartFile(file);
+                fileOperateService.toPdfOfMultipartFile(file,filepath,tplNode);
 
                 //上传文件
                 file.transferTo(dest);
@@ -124,6 +122,47 @@ public class TplNodeServiceImpl implements TplNodeService {
             return pageParam;
         }finally {
             PageHelper.clearPage();
+        }
+    }
+
+    @Override
+    public Map<String,Object> previewPdf(HttpServletResponse response,String tplid ,String filepath) {
+        Map<String,Object> result=new HashMap();
+        TplNode tplNode=tplNodeMapper.selectByPrimaryKey(tplid);
+        String filePath=tplNode.getFilepath().substring(0,tplNode.getFilepath().lastIndexOf("."))+".pdf";
+        File file =new File(filePath);
+        if (file.exists()){     //pdf文件存在
+            try(FileInputStream inputStream=new FileInputStream(file);
+                    ByteArrayOutputStream outputStream=new ByteArrayOutputStream()){
+                int len=0;
+                byte[] buffer = new byte[1024];
+                while ((len = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, len);
+                }
+                outputStream.flush();
+                byte[] bytes=outputStream.toByteArray();
+                //请求头处理
+                response.setHeader("Content-type","application/pdf");
+                String filename= tplNode.getFilename().substring(0,tplNode.getFilename().lastIndexOf("."))+".pdf";
+                response.setHeader("Content-Disposition", String.format("inline; filename=%s",filename));
+                response.setHeader("Content-Length", String.valueOf(bytes.length));
+                result.put("response",response);
+                result.put("bytes",bytes);
+                result.put("result","success");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return result;
+        }else { //pdf不存在,转化为pdf文件
+            File mfile=new File(tplNode.getFilepath());
+            try (FileInputStream input = new FileInputStream(mfile)){
+                MultipartFile multipartFile =new MockMultipartFile(tplNode.getFilename(), tplNode.getFilename(), tplNode.getTpltype(), input);
+                fileOperateService.toPdfOfMultipartFile(multipartFile,filepath,tplNode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            result.put("result","convert");
+            return result;
         }
     }
 }

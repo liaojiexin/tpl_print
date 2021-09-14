@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
 
 @RestController
 public class TplNodeController {
@@ -29,7 +33,7 @@ public class TplNodeController {
     @RequestMapping(value = "/tplNode/uploadTplFile", method = RequestMethod.POST)
     public ResultBody uploadTplFile(TplNode tplNode, MultipartFile file){
         //判断参数
-        if (ObjectUtil.isExist(tplNode.getTplname(),tplNode.getIsfile())==false ||file==null  || file.isEmpty()){   //参数为空
+        if (ObjectUtil.isExist(tplNode.getTplname(),tplNode.getIsfile())==false || file.isEmpty()){   //参数为空
             return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
         }else {
             //上传文件并存数据
@@ -76,14 +80,38 @@ public class TplNodeController {
         }
     }
 
-    /**
-     * 查询模板信息
+     /**
+     *  查询模板信息
+     * @param pageParam 分页信息
      * @return
      */
     @RequestMapping(value = "/tplNode/selectTplAll", method = RequestMethod.GET)
     public ResultBody selectTplAll(PageParam pageParam){
         pageParam=tplNodeService.selectTplAll(pageParam);
         return new ResultBody.Builder(ResultCode.SUCCESS).body(pageParam).build();
+    }
+
+    /**
+     *   预览模板的pdf文件
+     * @param response  响应参数
+     * @param tplid 模板id
+     * @return
+     */
+    @RequestMapping(value = "/tplNode/previewPdf",method = RequestMethod.POST)
+    public void previewPdf(HttpServletResponse response,String tplid) throws Exception {
+        Map<String,Object> result=tplNodeService.previewPdf(response,tplid,filepath);
+        if (result.get("result").toString().equals("success")){     //成功
+            response=(HttpServletResponse)result.get("response");
+            try (OutputStream outputStream=response.getOutputStream()){
+                byte[] bytes= (byte[]) result.get("bytes");
+                outputStream.write(bytes,0,bytes.length);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if (result.get("result").toString().equals("convert")){   //文件转换中
+//            throw new Exception("文件转化中.....");
+        }
+
     }
 
 }
