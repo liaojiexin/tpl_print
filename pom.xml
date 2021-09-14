@@ -30,6 +30,11 @@
             <artifactId>itextpdf</artifactId>
             <version>5.5.13</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!--   easypoi     -->
         <dependency>
             <groupId>cn.afterturn</groupId>
@@ -51,9 +56,17 @@
             <artifactId>easypoi-annotation</artifactId>
             <version>4.3.0</version>
         </dependency>
+
+        <!--   swagger3.0  https://blog.51cto.com/u_13260163/3147752  -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
