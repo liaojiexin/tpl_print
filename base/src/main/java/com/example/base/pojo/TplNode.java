@@ -1,25 +1,29 @@
 package com.example.base.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel("模板节点")
 public class TplNode {
-    //模板id
+    @ApiModelProperty("模板id")
     private String tplid;
-    //模板名称
+    @ApiModelProperty("模板名称")
     private String tplname;
-    //创建时间
+    @ApiModelProperty("创建时间")
     private Date createtime;
-    //修改时间
+    @ApiModelProperty("修改时间")
     private Date updatetime;
-    //模板类型
+    @ApiModelProperty("模板类型")
     private String tpltype;
-    //是文件还是文件夹
+    @ApiModelProperty("是否为叶子节点")
     private Boolean isfile;
-    //父级id
+    @ApiModelProperty("父级id")
     private String parentid;
-    //文件存储位置
+    @ApiModelProperty("文件存储位置")
     private String filepath;
-    //文件名称
+    @ApiModelProperty("文件名称")
     private String filename;
 
     public String getTplid() {

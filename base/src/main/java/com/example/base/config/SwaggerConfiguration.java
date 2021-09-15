@@ -5,10 +5,9 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -20,6 +19,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @EnableOpenApi
 @Configuration
@@ -109,8 +109,8 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
             if (registrations != null) {
                 for (InterceptorRegistration interceptorRegistration : registrations) {
                     interceptorRegistration
-                            .excludePathPatterns("*")
-                            .excludePathPatterns("/api/swagger**/**")
+                            .excludePathPatterns("/tplprint/*")
+                            .excludePathPatterns("/swagger**/**")
                             .excludePathPatterns("/webjars/**")
                             .excludePathPatterns("/v3/**")
                             .excludePathPatterns("/doc.html");
@@ -121,4 +121,20 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
         }
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Swagger 3.0.0: classpath:/META-INF/resources/webjars/springfox-swagger-ui/
+        registry.addResourceHandler("/swagger/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+                .setCacheControl(CacheControl.maxAge(5, TimeUnit.HOURS).cachePublic());
+
+        // Swagger 2.9.2、2.10.5: classpath:/META-INF/resources/webjars/
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/")
+                .setCacheControl(CacheControl.maxAge(5, TimeUnit.HOURS).cachePublic());
+        registry.addResourceHandler("/swagger**")
+                .addResourceLocations("classpath:/META-INF/resources/")
+                .setCacheControl(CacheControl.maxAge(5, TimeUnit.HOURS).cachePublic());
+
+    }
 }

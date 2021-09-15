@@ -6,6 +6,8 @@ import com.example.base.pojo.response.ResultBody;
 import com.example.base.pojo.response.ResultCode;
 import com.example.base.utils.ObjectUtil;
 import com.example.service.tpl.def.TplNodeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+@Api(tags = "模板类接口")
 @RestController
 public class TplNodeController {
 
@@ -30,6 +33,7 @@ public class TplNodeController {
      * @param file  文件
      * @return
      */
+    @ApiOperation("上传模板文件和模板信息")
     @RequestMapping(value = "/tplNode/uploadTplFile", method = RequestMethod.POST)
     public ResultBody uploadTplFile(TplNode tplNode, MultipartFile file){
         //判断参数
@@ -50,6 +54,7 @@ public class TplNodeController {
      * @param tplNode
      * @return
      */
+    @ApiOperation("删除模板文件和信息")
     @RequestMapping(value = "/tplNode/removeTplFile", method = RequestMethod.POST)
     public ResultBody removeTplFile(@RequestBody TplNode tplNode){
         if (ObjectUtil.isExist(tplNode.getTplid())==false){
@@ -66,6 +71,7 @@ public class TplNodeController {
      * @param file  新文件
      * @return
      */
+    @ApiOperation("修改模板文件和信息")
     @RequestMapping(value = "/tplNode/updateTplFile", method = RequestMethod.POST)
     public ResultBody updateTplFile(TplNode tplNode, MultipartFile file){
         if (ObjectUtil.isExist(tplNode.getTplid(),tplNode.getUpdatetime())==false){
@@ -85,6 +91,7 @@ public class TplNodeController {
      * @param pageParam 分页信息
      * @return
      */
+    @ApiOperation("查询模板信息")
     @RequestMapping(value = "/tplNode/selectTplAll", method = RequestMethod.GET)
     public ResultBody selectTplAll(PageParam pageParam){
         pageParam=tplNodeService.selectTplAll(pageParam);
@@ -97,7 +104,8 @@ public class TplNodeController {
      * @param tplid 模板id
      * @return
      */
-    @RequestMapping(value = "/tplNode/previewPdf",method = RequestMethod.POST)
+    @ApiOperation("预览模板的pdf文件")
+    @RequestMapping(value = "/tplNode/previewPdf",method = RequestMethod.GET)
     public void previewPdf(HttpServletResponse response,String tplid) throws Exception {
         Map<String,Object> result=tplNodeService.previewPdf(response,tplid,filepath);
         if (result.get("result").toString().equals("success")){     //成功
@@ -120,6 +128,7 @@ public class TplNodeController {
      * @param response
      * @param tplid
      */
+    @ApiOperation("下载模板文件")
     @RequestMapping(value = "/tplNode/downloadTpl",method = RequestMethod.POST)
     public void downloadTpl(HttpServletResponse response,String tplid){
         if (ObjectUtil.isExist(tplid)==true){

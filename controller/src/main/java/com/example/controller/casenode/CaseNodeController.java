@@ -7,12 +7,14 @@ import com.example.base.pojo.response.ResultCode;
 import com.example.base.utils.ObjectUtil;
 import com.example.service.tpl.def.CaseNodeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api("xxxxxx")
+@Api(tags = "实例类接口")
 @RestController
 public class CaseNodeController {
 
@@ -24,8 +26,9 @@ public class CaseNodeController {
      * @param caseNode 实例
      * @return
      */
+    @ApiOperation("新建实例")
     @RequestMapping(value = "/caseNode/createCaseNode",method = RequestMethod.POST)
-    public ResultBody createCaseNode(CaseNode caseNode){
+    public ResultBody createCaseNode(@RequestBody CaseNode caseNode){
         if (ObjectUtil.isExist(caseNode.getCreatetime(),caseNode.getCasename(),caseNode.getIsfile())==false)
             return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
         if(caseNodeService.createCaseNode(caseNode)){
@@ -39,8 +42,9 @@ public class CaseNodeController {
      * @param caseNode 实例
      * @return
      */
+    @ApiOperation("删除实例")
     @RequestMapping(value = "/caseNode/removeCaseNode",method = RequestMethod.POST)
-    public ResultBody removeCaseNode(CaseNode caseNode){
+    public ResultBody removeCaseNode(@RequestBody CaseNode caseNode){
         if (ObjectUtil.isExist(caseNode.getCaseid())){
             if (caseNodeService.removeCaseNode(caseNode)){
                 return new ResultBody.Builder(ResultCode.SUCCESS).build();
@@ -54,8 +58,9 @@ public class CaseNodeController {
      * @param caseNode
      * @return
      */
+    @ApiOperation("修改实例")
     @RequestMapping(value = "/caseNode/updateCaseNode",method = RequestMethod.POST)
-    public ResultBody updateCaseNode(CaseNode caseNode){
+    public ResultBody updateCaseNode(@RequestBody CaseNode caseNode){
         if (ObjectUtil.isExist(caseNode.getCaseid(),caseNode.getUpdatetime())){
             if (caseNodeService.updateCaseNode(caseNode))
                 return new ResultBody.Builder(ResultCode.SUCCESS).build();
@@ -67,6 +72,7 @@ public class CaseNodeController {
      * 查找实例
      * @return
      */
+    @ApiOperation("查找实例")
     @RequestMapping(value = "/caseNode/selectCaseNode",method = RequestMethod.GET)
     public ResultBody selectCaseNode(PageParam pageParam){
         pageParam=caseNodeService.selectCaseNode(pageParam);

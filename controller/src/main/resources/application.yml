@@ -31,6 +31,7 @@ swagger:
   application-name: ${spring.application.name}
   application-version: 1.0
   application-description: springfox swagger 3.0
+#  http://localhost:2021/tplprint/swagger-ui/index.html
   try-host: http://localhost:${server.port}
 
 mybatis:

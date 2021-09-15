@@ -1,23 +1,27 @@
 package com.example.base.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel("实例节点")
 public class CaseNode {
-    //实例id
+    @ApiModelProperty("实例id")
     private String caseid;
-    //实例名称
+    @ApiModelProperty("实例名称")
     private String casename;
-    //创建时间
+    @ApiModelProperty("创建时间")
     private Date createtime;
-    //修改时间
+    @ApiModelProperty("修改时间")
     private Date updatetime;
-    //使用的模板id
+    @ApiModelProperty("使用模板id")
     private String tplid;
-    //是文件还是文件夹
+    @ApiModelProperty("是否为叶子节点")
     private Boolean isfile;
-    //父级id
+    @ApiModelProperty("父级id")
     private String parentid;
-    //文件内容
+    @ApiModelProperty("实例内容")
     private String filecontent;
 
     public String getCaseid() {
