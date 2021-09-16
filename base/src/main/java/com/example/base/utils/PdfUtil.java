@@ -5,11 +5,10 @@ import com.aspose.cells.Workbook;
 import com.aspose.words.Document;
 import com.aspose.words.SaveFormat;
 import com.example.base.pojo.TplNode;
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * pdf文件工具类
@@ -43,5 +42,34 @@ public class PdfUtil {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    public static byte[] wordToPdfBytes(byte[] bytes) {
+        byte[] pdfBytes=new byte[0];
+        try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+        ByteArrayInputStream inputStream=new ByteArrayInputStream(bytes)){
+            Document doc = new Document(inputStream);
+            doc.save(outputStream, SaveFormat.PDF);
+            pdfBytes = outputStream.toByteArray();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return pdfBytes;
+    }
+
+    public static byte[] excelToPdfBytes(byte[] bytes) {
+        byte[] pdfBytes=new byte[0];
+        try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+            ByteArrayInputStream inputStream=new ByteArrayInputStream(bytes)){
+            Workbook workbook = new Workbook(inputStream);
+            PdfSaveOptions saveOptions = new PdfSaveOptions();
+            saveOptions.setAllColumnsInOnePagePerSheet(true);
+            workbook.save(outputStream, saveOptions);
+            pdfBytes = outputStream.toByteArray();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return pdfBytes;
     }
 }

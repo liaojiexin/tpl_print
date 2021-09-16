@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Api(tags = "模板类接口")
 @RestController
+@Transactional
 public class TplNodeController {
 
     @Value("${filepath}")
@@ -37,7 +39,7 @@ public class TplNodeController {
     @RequestMapping(value = "/tplNode/uploadTplFile", method = RequestMethod.POST)
     public ResultBody uploadTplFile(TplNode tplNode, MultipartFile file){
         //判断参数
-        if (ObjectUtil.isExist(tplNode.getTplname(),tplNode.getIsfile())==false || file.isEmpty()){   //参数为空
+        if (ObjectUtil.isExist(tplNode.getTplname(),tplNode.getIsfile(),tplNode.getCreatetime())==false || file.isEmpty()){   //参数为空
             return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
         }else {
             //上传文件并存数据

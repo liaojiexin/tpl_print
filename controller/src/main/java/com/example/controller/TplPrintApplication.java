@@ -6,11 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
 
 // 配置 spring 扫描的包
 @MapperScan(value = "com.example.dao.mapper")
+@EnableTransactionManagement        //启动事务
 @SpringBootApplication(scanBasePackages={"com.example"})
 public class TplPrintApplication {
 

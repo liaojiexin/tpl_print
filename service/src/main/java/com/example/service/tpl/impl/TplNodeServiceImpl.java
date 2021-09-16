@@ -32,7 +32,7 @@ public class TplNodeServiceImpl implements TplNodeService {
 
     //上传模板
     @Override
-    public Boolean uploadTplFile(String filepath, MultipartFile file, TplNode tplNode) {
+    public Boolean uploadTplFile(String filepath, MultipartFile file, TplNode tplNode){
         String originalFilename = file.getOriginalFilename();
         SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
         String tplid=String.valueOf(idWorker.nextId());
