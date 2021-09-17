@@ -4,6 +4,10 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.alibaba.fastjson.JSONObject;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.ConfigureBuilder;
+import com.deepoove.poi.plugin.table.LoopColumnTableRenderPolicy;
+import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
 import com.example.base.pojo.CaseNode;
 import com.example.base.pojo.TplNode;
 import com.example.dao.mapper.CaseNodeMapper;
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +57,7 @@ public class CaseTplServiceImpl implements CaseTplService {
         return pdfBytes;
     }
 
-    private byte[] caseOnTpl(CaseNode caseNode, TplNode tplNode) {
+    public byte[] caseOnTpl(CaseNode caseNode, TplNode tplNode) {
         byte[] bytes = new byte[0];
         String filecontent=caseNode.getFilecontent();   //实例内容
         String tpltype=tplNode.getTpltype();
@@ -72,7 +77,7 @@ public class CaseTplServiceImpl implements CaseTplService {
         return bytes;
     }
 
-    private byte[] caseOnTplExcel(String filecontent, TplNode tplNode) {
+    public byte[] caseOnTplExcel(String filecontent, TplNode tplNode) {
         String filepath=tplNode.getFilepath();      //模板文件路径
         byte[] bytes = new byte[0];
         Map<String, Object> map = new HashMap();
@@ -92,7 +97,7 @@ public class CaseTplServiceImpl implements CaseTplService {
         return bytes;
     }
 
-    private byte[] caseOnTplWord(String filecontent, TplNode tplNode) {
+    public byte[] caseOnTplWord(String filecontent, TplNode tplNode) {
         String filepath=tplNode.getFilepath();      //模板文件路径
         byte[] bytes = new byte[0];
         Map<String, Object> map = new HashMap();
@@ -101,14 +106,64 @@ public class CaseTplServiceImpl implements CaseTplService {
             map.put(key.getKey(),key.getValue());
         }
 
-        try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream();){
-            XWPFTemplate xwpfTemplate=XWPFTemplate.compile(filepath).render(map);
+        //json数据处理
+        Map<String,Object> results=manageMap(map);
+        Configure config = (Configure) results.get("config");
+
+        try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream()){
+            XWPFTemplate xwpfTemplate;
+            if (config!=null){
+                xwpfTemplate = XWPFTemplate.compile(filepath, config).render(map);
+            }else {
+                xwpfTemplate = XWPFTemplate.compile(filepath).render(map);
+            }
             xwpfTemplate.write(outputStream);
             bytes=outputStream.toByteArray();
         }catch (Exception e){
             e.printStackTrace();
         }
         return bytes;
+    }
+
+    //word模板中实例json数据处理
+    public Map<String, Object> manageMap(Map<String, Object> map) {
+        Map<String,Object> results=new HashMap<>();
+        LoopRowTableRenderPolicy policyRow = new LoopRowTableRenderPolicy();   //行循环
+        LoopColumnTableRenderPolicy policyColumn = new LoopColumnTableRenderPolicy(); //列循环
+        Configure config=null;
+        List<String> tablesRow=new ArrayList();    //行循环表格
+        List<String> tablesColumn=new ArrayList();    //列循环表格
+        for (String key:map.keySet()){
+            //数据格式表示表单行循环
+            if (map.get(key).toString().startsWith("[")
+                    && map.get(key).toString().endsWith("]")
+                        && key.startsWith("row_")){
+                tablesRow.add(key);
+            }
+            //数据格式表示表单列循环
+            if (map.get(key).toString().startsWith("[")
+                    && map.get(key).toString().endsWith("]")
+                    && key.startsWith("column_")){
+                tablesColumn.add(key);
+            }
+/*            if (map.get(key).toString().startsWith("@")){   //图片
+
+            }*/
+        }
+        if (tablesRow.size()>0 || tablesColumn.size()>0){
+            ConfigureBuilder configureBuilder = Configure.builder();
+            //存在表格行循环
+            for (String table:tablesRow) {
+                configureBuilder = configureBuilder.bind(table,policyRow);
+            }
+            //存在表格列循环
+            for (String table:tablesColumn) {
+                configureBuilder = configureBuilder.bind(table,policyColumn);
+            }
+            config=configureBuilder.build();
+        }
+        results.put("config",config);
+        return results;
     }
 
     @Override
