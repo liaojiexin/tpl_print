@@ -40,14 +40,16 @@ public class TplNodeController {
     public ResultBody uploadTplFile(TplNode tplNode, MultipartFile file){
         //判断参数
         if (ObjectUtil.isExist(tplNode.getTplname(),tplNode.getIsfile(),tplNode.getCreatetime())==false || file.isEmpty()){   //参数为空
-            return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
+            return new ResultBody.Builder(ResultCode.ERROR).message("必填参数为空").build();
+        }else if(!file.getContentType().equals("")){
+            return new ResultBody.Builder(ResultCode.ERROR).message("文件格式错误").build();
         }else {
             //上传文件并存数据
             Boolean b=tplNodeService.uploadTplFile(filepath,file,tplNode);
             if (b){
-                return new ResultBody.Builder(ResultCode.SUCCESS).build();
+                return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").build();
             } else
-                return new ResultBody.Builder(ResultCode.ERROR).build();
+                return new ResultBody.Builder(ResultCode.ERROR).message("请求失败").build();
         }
     }
 
@@ -60,10 +62,10 @@ public class TplNodeController {
     @RequestMapping(value = "/tplNode/removeTplFile", method = RequestMethod.POST)
     public ResultBody removeTplFile(@RequestBody TplNode tplNode){
         if (ObjectUtil.isExist(tplNode.getTplid())==false){
-            return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
+            return new ResultBody.Builder(ResultCode.ERROR).message("必填参数为空").build();
         }else {
             tplNodeService.removeTplFile(filepath,tplNode);
-            return new ResultBody.Builder(ResultCode.SUCCESS).build();
+            return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").build();
         }
     }
 
@@ -77,13 +79,13 @@ public class TplNodeController {
     @RequestMapping(value = "/tplNode/updateTplFile", method = RequestMethod.POST)
     public ResultBody updateTplFile(TplNode tplNode, MultipartFile file){
         if (ObjectUtil.isExist(tplNode.getTplid(),tplNode.getUpdatetime())==false){
-            return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
+            return new ResultBody.Builder(ResultCode.ERROR).message("必填参数为空").build();
         }else {
             Boolean b = tplNodeService.updateTplFile(filepath,tplNode,file);
             if (b){
-                return new ResultBody.Builder(ResultCode.SUCCESS).build();
+                return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").build();
             }else {
-                return new ResultBody.Builder(ResultCode.ERROR).build();
+                return new ResultBody.Builder(ResultCode.ERROR).message("请求失败").build();
             }
         }
     }
@@ -97,7 +99,7 @@ public class TplNodeController {
     @RequestMapping(value = "/tplNode/selectTplAll", method = RequestMethod.GET)
     public ResultBody selectTplAll(PageParam pageParam){
         pageParam=tplNodeService.selectTplAll(pageParam);
-        return new ResultBody.Builder(ResultCode.SUCCESS).body(pageParam).build();
+        return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").body(pageParam).build();
     }
 
     /**

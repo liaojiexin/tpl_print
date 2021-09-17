@@ -35,7 +35,14 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--   easypoi     -->
+        <!--   poi-tl word     -->
+        <dependency>
+            <groupId>com.deepoove</groupId>
+            <artifactId>poi-tl</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+
+        <!--   easypoi  excel   -->
         <dependency>
             <groupId>cn.afterturn</groupId>
             <artifactId>easypoi-spring-boot-starter</artifactId>

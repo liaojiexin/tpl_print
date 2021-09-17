@@ -44,7 +44,7 @@ public class PdfUtil {
         }
     }
 
-
+    //word byte转pdf byte
     public static byte[] wordToPdfBytes(byte[] bytes) {
         byte[] pdfBytes=new byte[0];
         try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
@@ -58,6 +58,7 @@ public class PdfUtil {
         return pdfBytes;
     }
 
+    //excel byte转pdf byte
     public static byte[] excelToPdfBytes(byte[] bytes) {
         byte[] pdfBytes=new byte[0];
         try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
@@ -71,5 +72,15 @@ public class PdfUtil {
             e.printStackTrace();
         }
         return pdfBytes;
+    }
+
+    //doc转docx
+    public static void docToDocx(){
+        try {
+            Document document=new Document("C:\\Users\\admin\\Desktop\\aaaa.doc");
+            document.save("C:\\Users\\admin\\Desktop\\aaaa.docx");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.apache.xmlgraphics:batik-svg-dom:1.14">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/apache/xmlgraphics/batik-svg-dom/1.14/batik-svg-dom-1.14.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/apache/xmlgraphics/batik-svg-dom/1.14/batik-svg-dom-1.14-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/org/apache/xmlgraphics/batik-svg-dom/1.14/batik-svg-dom-1.14-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

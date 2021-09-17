@@ -3,6 +3,7 @@ package com.example.service.tpl.impl;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.alibaba.fastjson.JSONObject;
+import com.deepoove.poi.XWPFTemplate;
 import com.example.base.pojo.CaseNode;
 import com.example.base.pojo.TplNode;
 import com.example.dao.mapper.CaseNodeMapper;
@@ -53,18 +54,17 @@ public class CaseTplServiceImpl implements CaseTplService {
 
     private byte[] caseOnTpl(CaseNode caseNode, TplNode tplNode) {
         byte[] bytes = new byte[0];
-        String filecontent=caseNode.getFilecontent();
-        String filepath=tplNode.getFilepath();
+        String filecontent=caseNode.getFilecontent();   //实例内容
         String tpltype=tplNode.getTpltype();
         switch (tpltype){
             case "application/msword":
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             case "application/vnd.ms-works":
-                bytes=caseOnTplWord(filecontent,filepath);
+                bytes=caseOnTplWord(filecontent,tplNode);
                 break;
             case "application/vnd.ms-excel":
             case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                bytes=caseOnTplExcel(filecontent,filepath);
+                bytes=caseOnTplExcel(filecontent,tplNode);
                 break;
             default:
                 break;
@@ -72,15 +72,16 @@ public class CaseTplServiceImpl implements CaseTplService {
         return bytes;
     }
 
-    private byte[] caseOnTplExcel(String filecontent, String filepath) {
+    private byte[] caseOnTplExcel(String filecontent, TplNode tplNode) {
+        String filepath=tplNode.getFilepath();      //模板文件路径
         byte[] bytes = new byte[0];
-        TemplateExportParams params = new TemplateExportParams(filepath);
         Map<String, Object> map = new HashMap();
         JSONObject jsonObject = JSONObject.parseObject(filecontent);
         for (Map.Entry<String, Object> key:jsonObject.entrySet()) {
             map.put(key.getKey(),key.getValue());
         }
 
+        TemplateExportParams params = new TemplateExportParams(filepath);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         try(ByteArrayOutputStream fos = new ByteArrayOutputStream()) {
             workbook.write(fos);
@@ -91,8 +92,22 @@ public class CaseTplServiceImpl implements CaseTplService {
         return bytes;
     }
 
-    private byte[] caseOnTplWord(String filecontent, String filepath) {
+    private byte[] caseOnTplWord(String filecontent, TplNode tplNode) {
+        String filepath=tplNode.getFilepath();      //模板文件路径
         byte[] bytes = new byte[0];
+        Map<String, Object> map = new HashMap();
+        JSONObject jsonObject = JSONObject.parseObject(filecontent);
+        for (Map.Entry<String, Object> key:jsonObject.entrySet()) {
+            map.put(key.getKey(),key.getValue());
+        }
+
+        try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream();){
+            XWPFTemplate xwpfTemplate=XWPFTemplate.compile(filepath).render(map);
+            xwpfTemplate.write(outputStream);
+            bytes=outputStream.toByteArray();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return bytes;
     }
 

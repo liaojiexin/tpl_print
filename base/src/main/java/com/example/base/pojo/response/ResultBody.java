@@ -28,15 +28,18 @@ public class ResultBody{
     public static class Builder {
         // Required parameters  final不可变的
         private final int code;
-        private final String message;
 
         // Optional parameters - initialized to default values
+        private String message;
         private Object body;
 
         public Builder(ResultCode resultCode) {
             this.code = resultCode.getCode();
-            this.message = resultCode.getMessage();
         }
+
+        //builder设值方法返回builder本身，以便把调用链接起来
+        public Builder message(String val)
+        { message = val;      return this; }
 
         //builder设值方法返回builder本身，以便把调用链接起来
         public Builder body(Object val)

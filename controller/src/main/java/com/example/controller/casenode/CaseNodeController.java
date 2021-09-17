@@ -30,11 +30,11 @@ public class CaseNodeController {
     @RequestMapping(value = "/caseNode/createCaseNode",method = RequestMethod.POST)
     public ResultBody createCaseNode(@RequestBody CaseNode caseNode){
         if (ObjectUtil.isExist(caseNode.getCreatetime(),caseNode.getCasename(),caseNode.getIsfile())==false)
-            return new ResultBody.Builder(ResultCode.LACK_PARAM).build();
+            return new ResultBody.Builder(ResultCode.ERROR).message("必填参数为空").build();
         if(caseNodeService.createCaseNode(caseNode)){
-            return new ResultBody.Builder(ResultCode.SUCCESS).build();
+            return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").build();
         }
-        return new ResultBody.Builder(ResultCode.ERROR).build();
+        return new ResultBody.Builder(ResultCode.ERROR).message("请求失败").build();
     }
 
     /**
@@ -47,10 +47,10 @@ public class CaseNodeController {
     public ResultBody removeCaseNode(@RequestBody CaseNode caseNode){
         if (ObjectUtil.isExist(caseNode.getCaseid())){
             if (caseNodeService.removeCaseNode(caseNode)){
-                return new ResultBody.Builder(ResultCode.SUCCESS).build();
+                return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").build();
             }
         }
-        return new ResultBody.Builder(ResultCode.ERROR).build();
+        return new ResultBody.Builder(ResultCode.ERROR).message("请求失败").build();
     }
 
     /**
@@ -63,9 +63,9 @@ public class CaseNodeController {
     public ResultBody updateCaseNode(@RequestBody CaseNode caseNode){
         if (ObjectUtil.isExist(caseNode.getCaseid(),caseNode.getUpdatetime())){
             if (caseNodeService.updateCaseNode(caseNode))
-                return new ResultBody.Builder(ResultCode.SUCCESS).build();
+                return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").build();
         }
-        return new ResultBody.Builder(ResultCode.ERROR).build();
+        return new ResultBody.Builder(ResultCode.ERROR).message("请求失败").build();
     }
 
     /**
@@ -76,6 +76,6 @@ public class CaseNodeController {
     @RequestMapping(value = "/caseNode/selectCaseNode",method = RequestMethod.GET)
     public ResultBody selectCaseNode(PageParam pageParam){
         pageParam=caseNodeService.selectCaseNode(pageParam);
-        return new ResultBody.Builder(ResultCode.SUCCESS).body(pageParam).build();
+        return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").body(pageParam).build();
     }
 }
