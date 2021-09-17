@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
+import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.plugin.table.LoopColumnTableRenderPolicy;
 import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
 import com.example.base.pojo.CaseNode;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,31 +47,31 @@ public class CaseTplServiceImpl implements CaseTplService {
 
     @Override
     public byte[] caseToPdfByTpl(CaseNode caseNode) {
-        byte[] pdfBytes=null;   //pdf文件byte
+        byte[] pdfBytes = null;   //pdf文件byte
         caseNode = caseNodeMapper.selectByPrimaryKey(caseNode.getCaseid());
-        TplNode tplNode=tplNodeMapper.selectByPrimaryKey(caseNode.getTplid());
-        if (tplNode!=null && StringUtils.isNotBlank(caseNode.getFilecontent())){
+        TplNode tplNode = tplNodeMapper.selectByPrimaryKey(caseNode.getTplid());
+        if (tplNode != null && StringUtils.isNotBlank(caseNode.getFilecontent())) {
             //先把实例的内容导入到模板中
-            byte[] bytes=caseOnTpl(caseNode,tplNode);
+            byte[] bytes = caseOnTpl(caseNode, tplNode);
             //文件转化
-            pdfBytes=fileOperateService.toPdfOfBytes(bytes,tplNode.getTpltype());
+            pdfBytes = fileOperateService.toPdfOfBytes(bytes, tplNode.getTpltype());
         }
         return pdfBytes;
     }
 
     public byte[] caseOnTpl(CaseNode caseNode, TplNode tplNode) {
         byte[] bytes = new byte[0];
-        String filecontent=caseNode.getFilecontent();   //实例内容
-        String tpltype=tplNode.getTpltype();
-        switch (tpltype){
+        String filecontent = caseNode.getFilecontent();   //实例内容
+        String tpltype = tplNode.getTpltype();
+        switch (tpltype) {
             case "application/msword":
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             case "application/vnd.ms-works":
-                bytes=caseOnTplWord(filecontent,tplNode);
+                bytes = caseOnTplWord(filecontent, tplNode);
                 break;
             case "application/vnd.ms-excel":
             case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                bytes=caseOnTplExcel(filecontent,tplNode);
+                bytes = caseOnTplExcel(filecontent, tplNode);
                 break;
             default:
                 break;
@@ -78,48 +80,49 @@ public class CaseTplServiceImpl implements CaseTplService {
     }
 
     public byte[] caseOnTplExcel(String filecontent, TplNode tplNode) {
-        String filepath=tplNode.getFilepath();      //模板文件路径
+        String filepath = tplNode.getFilepath();      //模板文件路径
         byte[] bytes = new byte[0];
         Map<String, Object> map = new HashMap();
         JSONObject jsonObject = JSONObject.parseObject(filecontent);
-        for (Map.Entry<String, Object> key:jsonObject.entrySet()) {
-            map.put(key.getKey(),key.getValue());
+        for (Map.Entry<String, Object> key : jsonObject.entrySet()) {
+            map.put(key.getKey(), key.getValue());
         }
 
         TemplateExportParams params = new TemplateExportParams(filepath);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
-        try(ByteArrayOutputStream fos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream fos = new ByteArrayOutputStream()) {
             workbook.write(fos);
-            bytes=fos.toByteArray();
-        }catch (Exception e){
+            bytes = fos.toByteArray();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return bytes;
     }
 
     public byte[] caseOnTplWord(String filecontent, TplNode tplNode) {
-        String filepath=tplNode.getFilepath();      //模板文件路径
+        String filepath = tplNode.getFilepath();      //模板文件路径
         byte[] bytes = new byte[0];
         Map<String, Object> map = new HashMap();
         JSONObject jsonObject = JSONObject.parseObject(filecontent);
-        for (Map.Entry<String, Object> key:jsonObject.entrySet()) {
-            map.put(key.getKey(),key.getValue());
+        for (Map.Entry<String, Object> key : jsonObject.entrySet()) {
+            map.put(key.getKey(), key.getValue());
         }
 
         //json数据处理
-        Map<String,Object> results=manageMap(map);
+        Map<String, Object> results = manageMap(map);
         Configure config = (Configure) results.get("config");
+        map = (Map<String, Object>) results.get("map");
 
-        try(ByteArrayOutputStream outputStream=new ByteArrayOutputStream()){
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             XWPFTemplate xwpfTemplate;
-            if (config!=null){
+            if (config != null) {
                 xwpfTemplate = XWPFTemplate.compile(filepath, config).render(map);
-            }else {
+            } else {
                 xwpfTemplate = XWPFTemplate.compile(filepath).render(map);
             }
             xwpfTemplate.write(outputStream);
-            bytes=outputStream.toByteArray();
-        }catch (Exception e){
+            bytes = outputStream.toByteArray();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return bytes;
@@ -127,49 +130,51 @@ public class CaseTplServiceImpl implements CaseTplService {
 
     //word模板中实例json数据处理
     public Map<String, Object> manageMap(Map<String, Object> map) {
-        Map<String,Object> results=new HashMap<>();
+        Map<String, Object> results = new HashMap<>();
         LoopRowTableRenderPolicy policyRow = new LoopRowTableRenderPolicy();   //行循环
         LoopColumnTableRenderPolicy policyColumn = new LoopColumnTableRenderPolicy(); //列循环
-        Configure config=null;
-        List<String> tablesRow=new ArrayList();    //行循环表格
-        List<String> tablesColumn=new ArrayList();    //列循环表格
-        for (String key:map.keySet()){
+        Configure config = null;
+        List<String> tablesRow = new ArrayList();    //行循环表格
+        List<String> tablesColumn = new ArrayList();    //列循环表格
+        for (String key : map.keySet()) {
             //数据格式表示表单行循环
             if (map.get(key).toString().startsWith("[")
                     && map.get(key).toString().endsWith("]")
-                        && key.startsWith("row_")){
+                    && key.startsWith("row_")) {
                 tablesRow.add(key);
-            }
-            //数据格式表示表单列循环
-            if (map.get(key).toString().startsWith("[")
-                    && map.get(key).toString().endsWith("]")
-                    && key.startsWith("column_")){
-                tablesColumn.add(key);
-            }
-/*            if (map.get(key).toString().startsWith("@")){   //图片
-
-            }*/
+            } else
+                //数据格式表示表单列循环
+                if (map.get(key).toString().startsWith("[")
+                        && map.get(key).toString().endsWith("]")
+                        && key.startsWith("column_")) {
+                    tablesColumn.add(key);
+                } else if (key.startsWith("@")) {   //图片
+                    //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
+                    map.put(key.substring(1), StringUtils.strip(map.get(key).toString(),"\u202a"));
+                    map.remove(key);
+                }
         }
-        if (tablesRow.size()>0 || tablesColumn.size()>0){
+        if (tablesRow.size() > 0 || tablesColumn.size() > 0) {
             ConfigureBuilder configureBuilder = Configure.builder();
             //存在表格行循环
-            for (String table:tablesRow) {
-                configureBuilder = configureBuilder.bind(table,policyRow);
+            for (String table : tablesRow) {
+                configureBuilder = configureBuilder.bind(table, policyRow);
             }
             //存在表格列循环
-            for (String table:tablesColumn) {
-                configureBuilder = configureBuilder.bind(table,policyColumn);
+            for (String table : tablesColumn) {
+                configureBuilder = configureBuilder.bind(table, policyColumn);
             }
-            config=configureBuilder.build();
+            config = configureBuilder.build();
         }
-        results.put("config",config);
+        results.put("config", config);
+        results.put("map", map);
         return results;
     }
 
     @Override
-    public void mergeCasePdf(List<byte[]> list , HttpServletResponse response) {
+    public void mergeCasePdf(List<byte[]> list, HttpServletResponse response) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            OutputStream out =response.getOutputStream()) {
+             OutputStream out = response.getOutputStream()) {
             //用itext合并多个pdf的byte为一个pdf文件
             Document document = new Document();
             try {
@@ -187,13 +192,13 @@ public class CaseTplServiceImpl implements CaseTplService {
             } finally { //要在使用outputStream之前关闭document，不然流会获取出错
                 document.close();
             }
-            byte[] bytes=outputStream.toByteArray();
+            byte[] bytes = outputStream.toByteArray();
             response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition",String.format("inline; filename=%s",""));
+            response.setHeader("Content-Disposition", String.format("inline; filename=%s", ""));
             response.setContentLength(bytes.length);
             out.write(bytes);
             out.flush();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
