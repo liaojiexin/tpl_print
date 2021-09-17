@@ -41,15 +41,18 @@ public class TplNodeController {
         //判断参数
         if (ObjectUtil.isExist(tplNode.getTplname(),tplNode.getIsfile(),tplNode.getCreatetime())==false || file.isEmpty()){   //参数为空
             return new ResultBody.Builder(ResultCode.ERROR).message("必填参数为空").build();
-        }else if(!file.getContentType().equals("")){
-            return new ResultBody.Builder(ResultCode.ERROR).message("文件格式错误").build();
-        }else {
+        }else if(file.getContentType().equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ||
+                file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
+                file.getContentType().equals("application/vnd.ms-excel")){
             //上传文件并存数据
             Boolean b=tplNodeService.uploadTplFile(filepath,file,tplNode);
             if (b){
                 return new ResultBody.Builder(ResultCode.SUCCESS).message("请求成功").build();
-            } else
-                return new ResultBody.Builder(ResultCode.ERROR).message("请求失败").build();
+            }else {
+                return new ResultBody.Builder(ResultCode.SUCCESS).message("请求错误").build();
+            }
+        }else {
+            return new ResultBody.Builder(ResultCode.ERROR).message("文件格式错误").build();
         }
     }
 

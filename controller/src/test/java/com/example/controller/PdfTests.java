@@ -8,7 +8,6 @@ public class PdfTests {
 
     public static void main(String[] args) throws Exception {
 //        execlToPdfByte();
-        docToDocx();
     }
 
     public static void execlToPdfByte() throws Exception{
@@ -21,9 +20,5 @@ public class PdfTests {
         OutputStream output = new FileOutputStream(file1);
         BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
         bufferedOutput.write(bytes);
-    }
-
-    public static void docToDocx(){
-        PdfUtil.docToDocx();
     }
 }

@@ -73,14 +73,4 @@ public class PdfUtil {
         }
         return pdfBytes;
     }
-
-    //doc转docx
-    public static void docToDocx(){
-        try {
-            Document document=new Document("C:\\Users\\admin\\Desktop\\aaaa.doc");
-            document.save("C:\\Users\\admin\\Desktop\\aaaa.docx");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
