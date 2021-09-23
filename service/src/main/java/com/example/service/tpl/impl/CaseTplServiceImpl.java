@@ -1,5 +1,6 @@
 package com.example.service.tpl.impl;
 
+import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.alibaba.fastjson.JSONObject;
@@ -8,7 +9,6 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
 import com.deepoove.poi.data.Includes;
 import com.deepoove.poi.data.Numberings;
-import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.plugin.table.LoopColumnTableRenderPolicy;
 import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
 import com.example.base.pojo.CaseNode;
@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Service
@@ -84,7 +83,15 @@ public class CaseTplServiceImpl implements CaseTplService {
         Map<String, Object> map = new HashMap();
         JSONObject jsonObject = JSONObject.parseObject(filecontent);
         for (Map.Entry<String, Object> key : jsonObject.entrySet()) {
-            map.put(key.getKey(), key.getValue());
+            if (key.getKey().startsWith("image")) {      //图片
+                ImageEntity image = new ImageEntity(StringUtils.strip(String.valueOf(key.getValue()), "\u202a"),100,100);
+/*                image.setHeight(200);
+                image.setWidth(200);
+                image.setUrl(StringUtils.strip(String.valueOf(key.getValue()), "\u202a"));*/
+                map.put(key.getKey(), image);
+            } else {
+                map.put(key.getKey(), key.getValue());
+            }
         }
 
         TemplateExportParams params = new TemplateExportParams(filepath);
@@ -130,7 +137,7 @@ public class CaseTplServiceImpl implements CaseTplService {
     //word模板中实例json数据处理 http://deepoove.com/poi-tl
     public Map<String, Object> manageMap(Map<String, Object> map) {
         Map<String, Object> results = new HashMap<>();
-        Map<String, Object> resultmap =new HashMap<>();
+        Map<String, Object> resultmap = new HashMap<>();
         LoopRowTableRenderPolicy policyRow = new LoopRowTableRenderPolicy();   //行循环
         LoopColumnTableRenderPolicy policyColumn = new LoopColumnTableRenderPolicy(); //列循环
         Configure config = null;
@@ -146,17 +153,19 @@ public class CaseTplServiceImpl implements CaseTplService {
                     && map.get(key).toString().endsWith("]")
                     && key.startsWith("row_")) {
                 tablesRow.add(key);
-                resultmap.put(key,map.get(key));
+                resultmap.put(key, map.get(key));
             } else if (map.get(key).toString().startsWith("[")             //数据格式表示表单列循环
                     && map.get(key).toString().endsWith("]")
                     && key.startsWith("column_")) {
                 tablesColumn.add(key);
-                resultmap.put(key,map.get(key));
+                resultmap.put(key, map.get(key));
             } else if (key.startsWith("@")) {   //图片
                 //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
                 resultmap.put(key.substring(1), StringUtils.strip(map.get(key).toString(), "\u202a"));
             } else if (key.startsWith("*")) {    //列表
-                resultmap.put(key.substring(1), Numberings.create(map.get(key).toString()));
+                String string=String.valueOf(map.get(key));
+                String[] strings=string.substring(2,string.length()-2).split("\",\"");
+                resultmap.put(key.substring(1), Numberings.create(strings));
             } else if (key.startsWith("+")) {    //嵌套打印
                 JSONObject jsonObject = JSONObject.parseObject(map.get(key).toString());
                 HashMap mapInclude = new HashMap();
@@ -166,8 +175,8 @@ public class CaseTplServiceImpl implements CaseTplService {
                 String ofLocal = String.valueOf(mapInclude.get("oflocal"));
                 String filePath = tplNodeMapper.selectByPrimaryKey(ofLocal).getFilepath();
                 resultmap.put(key.substring(1), Includes.ofLocal(filePath).setRenderModel(mapInclude.get("data")).create());
-            }else {             //普通文本
-                resultmap.put(key,map.get(key));
+            } else {             //普通文本
+                resultmap.put(key, map.get(key));
             }
         }
         if (tablesRow.size() > 0 || tablesColumn.size() > 0) {
