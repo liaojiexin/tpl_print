@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
+import com.deepoove.poi.data.Includes;
+import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.plugin.table.LoopColumnTableRenderPolicy;
 import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
@@ -28,10 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CaseTplServiceImpl implements CaseTplService {
@@ -128,31 +127,48 @@ public class CaseTplServiceImpl implements CaseTplService {
         return bytes;
     }
 
-    //word模板中实例json数据处理
+    //word模板中实例json数据处理 http://deepoove.com/poi-tl
     public Map<String, Object> manageMap(Map<String, Object> map) {
         Map<String, Object> results = new HashMap<>();
+        Map<String, Object> resultmap =new HashMap<>();
         LoopRowTableRenderPolicy policyRow = new LoopRowTableRenderPolicy();   //行循环
         LoopColumnTableRenderPolicy policyColumn = new LoopColumnTableRenderPolicy(); //列循环
         Configure config = null;
         List<String> tablesRow = new ArrayList();    //行循环表格
         List<String> tablesColumn = new ArrayList();    //列循环表格
-        for (String key : map.keySet()) {
+
+        Set set = map.keySet(); //拿到所有的key
+        Iterator iterator = set.iterator();
+        while (iterator.hasNext()) {
+            String key = String.valueOf(iterator.next());
             //数据格式表示表单行循环
             if (map.get(key).toString().startsWith("[")
                     && map.get(key).toString().endsWith("]")
                     && key.startsWith("row_")) {
                 tablesRow.add(key);
-            } else
-                //数据格式表示表单列循环
-                if (map.get(key).toString().startsWith("[")
-                        && map.get(key).toString().endsWith("]")
-                        && key.startsWith("column_")) {
-                    tablesColumn.add(key);
-                } else if (key.startsWith("@")) {   //图片
-                    //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
-                    map.put(key.substring(1), StringUtils.strip(map.get(key).toString(),"\u202a"));
-                    map.remove(key);
+                resultmap.put(key,map.get(key));
+            } else if (map.get(key).toString().startsWith("[")             //数据格式表示表单列循环
+                    && map.get(key).toString().endsWith("]")
+                    && key.startsWith("column_")) {
+                tablesColumn.add(key);
+                resultmap.put(key,map.get(key));
+            } else if (key.startsWith("@")) {   //图片
+                //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
+                resultmap.put(key.substring(1), StringUtils.strip(map.get(key).toString(), "\u202a"));
+            } else if (key.startsWith("*")) {    //列表
+                resultmap.put(key.substring(1), Numberings.create(map.get(key).toString()));
+            } else if (key.startsWith("+")) {    //嵌套打印
+                JSONObject jsonObject = JSONObject.parseObject(map.get(key).toString());
+                HashMap mapInclude = new HashMap();
+                for (Map.Entry<String, Object> keyMap : jsonObject.entrySet()) {
+                    mapInclude.put(keyMap.getKey(), keyMap.getValue());
                 }
+                String ofLocal = String.valueOf(mapInclude.get("oflocal"));
+                String filePath = tplNodeMapper.selectByPrimaryKey(ofLocal).getFilepath();
+                resultmap.put(key.substring(1), Includes.ofLocal(filePath).setRenderModel(mapInclude.get("data")).create());
+            }else {             //普通文本
+                resultmap.put(key,map.get(key));
+            }
         }
         if (tablesRow.size() > 0 || tablesColumn.size() > 0) {
             ConfigureBuilder configureBuilder = Configure.builder();
@@ -167,7 +183,7 @@ public class CaseTplServiceImpl implements CaseTplService {
             config = configureBuilder.build();
         }
         results.put("config", config);
-        results.put("map", map);
+        results.put("map", resultmap);
         return results;
     }
 
