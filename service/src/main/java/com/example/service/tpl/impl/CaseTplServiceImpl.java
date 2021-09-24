@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.*;
 
@@ -83,15 +85,12 @@ public class CaseTplServiceImpl implements CaseTplService {
         Map<String, Object> map = new HashMap();
         JSONObject jsonObject = JSONObject.parseObject(filecontent);
         for (Map.Entry<String, Object> key : jsonObject.entrySet()) {
-            if (key.getKey().startsWith("image")) {      //图片
-                ImageEntity image = new ImageEntity(StringUtils.strip(String.valueOf(key.getValue()), "\u202a"),100,100);
-/*                image.setHeight(200);
-                image.setWidth(200);
-                image.setUrl(StringUtils.strip(String.valueOf(key.getValue()), "\u202a"));*/
+/*            if (key.getKey().startsWith("image")) {      //图片
+                ImageEntity image = new ImageEntity(StringUtils.strip(String.valueOf(key.getValue()), "\u202a"),3000,3000);
                 map.put(key.getKey(), image);
-            } else {
+            } else {*/
                 map.put(key.getKey(), key.getValue());
-            }
+            /*}*/
         }
 
         TemplateExportParams params = new TemplateExportParams(filepath);
@@ -99,6 +98,8 @@ public class CaseTplServiceImpl implements CaseTplService {
         try (ByteArrayOutputStream fos = new ByteArrayOutputStream()) {
             workbook.write(fos);
             bytes = fos.toByteArray();
+            FileOutputStream outputStream=new FileOutputStream(new File("C:\\Users\\admin\\Desktop\\test.xls"));
+            outputStream.write(bytes,0,bytes.length);
         } catch (Exception e) {
             e.printStackTrace();
         }
