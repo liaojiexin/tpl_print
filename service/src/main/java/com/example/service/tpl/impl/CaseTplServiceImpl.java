@@ -152,22 +152,22 @@ public class CaseTplServiceImpl implements CaseTplService {
             //数据格式表示表单行循环
             if (map.get(key).toString().startsWith("[")
                     && map.get(key).toString().endsWith("]")
-                    && key.startsWith("row_")) {
+                    && key.startsWith("row_")) {    //row_开头为行循环表
                 tablesRow.add(key);
-                resultmap.put(key, map.get(key));
+                resultmap.put(key, StringUtils.strip(map.get(key).toString(), "\u202a"));
             } else if (map.get(key).toString().startsWith("[")             //数据格式表示表单列循环
                     && map.get(key).toString().endsWith("]")
-                    && key.startsWith("column_")) {
+                    && key.startsWith("column_")) {     //column_开头为列循环表
                 tablesColumn.add(key);
                 resultmap.put(key, map.get(key));
-            } else if (key.startsWith("@")) {   //图片
+            } else /*if (key.startsWith("@")) {   //图片 key开头@
                 //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
                 resultmap.put(key.substring(1), StringUtils.strip(map.get(key).toString(), "\u202a"));
-            } else if (key.startsWith("*")) {    //列表
+            } else*/ if (key.startsWith("*")) {    //列表 key开头*   格式为数据格式“xxx”:["aaa","bbb"]
                 String string=String.valueOf(map.get(key));
                 String[] strings=string.substring(2,string.length()-2).split("\",\"");
                 resultmap.put(key.substring(1), Numberings.create(strings));
-            } else if (key.startsWith("+")) {    //嵌套打印
+            } else if (key.startsWith("+")) {    //嵌套打印 key开头+ oflocal默认为嵌套模板的id，data为嵌套模板的数据
                 JSONObject jsonObject = JSONObject.parseObject(map.get(key).toString());
                 HashMap mapInclude = new HashMap();
                 for (Map.Entry<String, Object> keyMap : jsonObject.entrySet()) {
@@ -176,8 +176,10 @@ public class CaseTplServiceImpl implements CaseTplService {
                 String ofLocal = String.valueOf(mapInclude.get("oflocal"));
                 String filePath = tplNodeMapper.selectByPrimaryKey(ofLocal).getFilepath();
                 resultmap.put(key.substring(1), Includes.ofLocal(filePath).setRenderModel(mapInclude.get("data")).create());
-            } else {             //普通文本
-                resultmap.put(key, map.get(key));
+            } else {             //普通文本和图片
+//                resultmap.put(key, map.get(key));
+                //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
+                resultmap.put(key, StringUtils.strip(map.get(key).toString(), "\u202a"));
             }
         }
         if (tablesRow.size() > 0 || tablesColumn.size() > 0) {
