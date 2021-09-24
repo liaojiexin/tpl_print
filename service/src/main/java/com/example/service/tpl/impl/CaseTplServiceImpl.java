@@ -89,7 +89,7 @@ public class CaseTplServiceImpl implements CaseTplService {
                 ImageEntity image = new ImageEntity(StringUtils.strip(String.valueOf(key.getValue()), "\u202a"),3000,3000);
                 map.put(key.getKey(), image);
             } else {*/
-                map.put(key.getKey(), key.getValue());
+            map.put(key.getKey(), key.getValue());
             /*}*/
         }
 
@@ -98,8 +98,8 @@ public class CaseTplServiceImpl implements CaseTplService {
         try (ByteArrayOutputStream fos = new ByteArrayOutputStream()) {
             workbook.write(fos);
             bytes = fos.toByteArray();
-            FileOutputStream outputStream=new FileOutputStream(new File("C:\\Users\\admin\\Desktop\\test.xls"));
-            outputStream.write(bytes,0,bytes.length);
+            FileOutputStream outputStream = new FileOutputStream(new File("C:\\Users\\admin\\Desktop\\test.xls"));
+            outputStream.write(bytes, 0, bytes.length);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,16 +109,21 @@ public class CaseTplServiceImpl implements CaseTplService {
     public byte[] caseOnTplWord(String filecontent, TplNode tplNode) {
         String filepath = tplNode.getFilepath();      //模板文件路径
         byte[] bytes = new byte[0];
-        Map<String, Object> map = new HashMap();
-        JSONObject jsonObject = JSONObject.parseObject(filecontent);
+
+        /*JSONObject jsonObject = JSONObject.parseObject(filecontent);
         for (Map.Entry<String, Object> key : jsonObject.entrySet()) {
             map.put(key.getKey(), key.getValue());
         }
-
         //json数据处理
+        Map<String, Object> map = new HashMap();
         Map<String, Object> results = manageMap(map);
-        Configure config = (Configure) results.get("config");
-        map = (Map<String, Object>) results.get("map");
+        Configure config=(Configure)results.get("config");
+        map = (Map<String, Object>) results.get("map");*/
+
+        ConfigureBuilder configureBuilder = Configure.builder();
+        Map<String, Object> map = manageMap(filecontent, configureBuilder);
+        ConfigureBuilder configureBuilder1 = (ConfigureBuilder) map.get("configureBuilder");
+        Configure config = configureBuilder1.build();
 
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             XWPFTemplate xwpfTemplate;
@@ -133,6 +138,66 @@ public class CaseTplServiceImpl implements CaseTplService {
             e.printStackTrace();
         }
         return bytes;
+    }
+
+    //word模板中实例json数据处理 http://deepoove.com/poi-tl
+    private Map<String, Object> manageMap(String filecontent, ConfigureBuilder configureBuilder) {
+        Map<String, Object> results = new HashMap<>();
+        LoopRowTableRenderPolicy policyRow = new LoopRowTableRenderPolicy();   //行循环
+        LoopColumnTableRenderPolicy policyColumn = new LoopColumnTableRenderPolicy(); //列循环
+        Configure config = null;
+        JSONObject jsonObject = JSONObject.parseObject(filecontent);
+        for (Map.Entry<String, Object> key : jsonObject.entrySet()) {
+            if (key.getValue().toString().startsWith("[")        //数据格式表示表单行循环
+                    && key.getValue().toString().endsWith("]")
+                    && key.getKey().startsWith("row_")) {    //row_开头为行循环表
+                configureBuilder = configureBuilder.bind(key.getKey(), policyRow);
+                String s = String.valueOf(key.getValue());
+                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
+                List<String> lists = Arrays.asList(ss);
+                List<Map> listMap = new ArrayList<>();
+                for (String list : lists) {
+                    listMap.add(manageMap("{" + list + "}", configureBuilder));
+                }
+                results.put("configureBuilder", configureBuilder);
+                results.put(key.getKey(), listMap);
+                continue;
+            } else if (key.getValue().toString().startsWith("[")             //数据格式表示表单列循环
+                    && key.getValue().toString().endsWith("]")
+                    && key.getKey().startsWith("column_")) {     //column_开头为列循环表
+                configureBuilder = configureBuilder.bind(key.getKey(), policyColumn);
+                String s = String.valueOf(key.getValue());
+                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
+                List<String> lists = Arrays.asList(ss);
+                List<Map> listMap = new ArrayList<>();
+                for (String list : lists) {
+                    listMap.add(manageMap("{" + list + "}", configureBuilder));
+                }
+                results.put("configureBuilder", configureBuilder);
+                results.put(key.getKey(), listMap);
+                continue;
+            } else if (key.getKey().startsWith("*")) {    //列表 key开头*   格式为数据格式"xxx":["aaa","bbb"]
+                String string = String.valueOf(key.getValue());
+                String[] strings = string.substring(2, string.length() - 2).split("\",\"");
+                results.put(key.getKey().substring(1), Numberings.create(strings));
+                continue;
+            } else if (key.getKey().startsWith("+")) {    //嵌套打印 key开头+ oflocal默认为嵌套模板的id，data为嵌套模板的数据
+                JSONObject json = JSONObject.parseObject(key.getValue().toString());
+                HashMap mapInclude = new HashMap();
+                for (Map.Entry<String, Object> keyMap : json.entrySet()) {
+                    mapInclude.put(keyMap.getKey(), keyMap.getValue());
+                }
+                String ofLocal = String.valueOf(mapInclude.get("oflocal"));
+                String filePath = tplNodeMapper.selectByPrimaryKey(ofLocal).getFilepath();
+                results.put(key.getKey().substring(1), Includes.ofLocal(filePath).setRenderModel(mapInclude.get("data")).create());
+                continue;
+            } else {             //普通文本和图片
+                //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
+                results.put(key.getKey(), StringUtils.strip(key.getValue().toString(), "\u202a"));
+                continue;
+            }
+        }
+        return results;
     }
 
     //word模板中实例json数据处理 http://deepoove.com/poi-tl
@@ -154,7 +219,7 @@ public class CaseTplServiceImpl implements CaseTplService {
                     && map.get(key).toString().endsWith("]")
                     && key.startsWith("row_")) {    //row_开头为行循环表
                 tablesRow.add(key);
-                resultmap.put(key, StringUtils.strip(map.get(key).toString(), "\u202a"));
+                resultmap.put(key, map.get(key));
             } else if (map.get(key).toString().startsWith("[")             //数据格式表示表单列循环
                     && map.get(key).toString().endsWith("]")
                     && key.startsWith("column_")) {     //column_开头为列循环表
@@ -164,8 +229,8 @@ public class CaseTplServiceImpl implements CaseTplService {
                 //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
                 resultmap.put(key.substring(1), StringUtils.strip(map.get(key).toString(), "\u202a"));
             } else*/ if (key.startsWith("*")) {    //列表 key开头*   格式为数据格式“xxx”:["aaa","bbb"]
-                String string=String.valueOf(map.get(key));
-                String[] strings=string.substring(2,string.length()-2).split("\",\"");
+                String string = String.valueOf(map.get(key));
+                String[] strings = string.substring(2, string.length() - 2).split("\",\"");
                 resultmap.put(key.substring(1), Numberings.create(strings));
             } else if (key.startsWith("+")) {    //嵌套打印 key开头+ oflocal默认为嵌套模板的id，data为嵌套模板的数据
                 JSONObject jsonObject = JSONObject.parseObject(map.get(key).toString());
