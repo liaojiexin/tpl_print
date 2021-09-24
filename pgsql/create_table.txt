@@ -1,0 +1,73 @@
+create table tpl_node
+(
+    tplid      varchar(255) not null
+        constraint tpl_node_pk
+            primary key,
+    tplname    varchar(255),
+    createtime timestamp,
+    updatetime timestamp,
+    tpltype    varchar(255),
+    isfile     boolean,
+    parentid   varchar(255),
+    filepath   varchar(255),
+    filename   varchar(255)
+);
+
+comment on table tpl_node is '模板目录节点';
+
+comment on column tpl_node.tplid is '模板id';
+
+comment on column tpl_node.tplname is '模板名称';
+
+comment on column tpl_node.createtime is '创建的时间';
+
+comment on column tpl_node.updatetime is '修改的时间';
+
+comment on column tpl_node.tpltype is '模板类型(doc/docx/xls/xlsx等)';
+
+comment on column tpl_node.isfile is '判断是文件还是目录';
+
+comment on column tpl_node.parentid is '父级id(目录id)';
+
+comment on column tpl_node.filepath is '文件存储的位置';
+
+comment on column tpl_node.filename is '文件名称';
+
+alter table tpl_node
+    owner to postgres;
+
+create table case_node
+(
+    caseid      varchar(255) not null
+        constraint case_node_pk
+            primary key,
+    createtime  timestamp,
+    updatetime  timestamp,
+    tplid       varchar(255),
+    isfile      boolean,
+    parentid    varchar(255),
+    filecontent text,
+    casename    varchar(255)
+);
+
+comment on table case_node is '内容节点';
+
+comment on column case_node.caseid is '内容目录id';
+
+comment on column case_node.createtime is '创建的时间';
+
+comment on column case_node.updatetime is '修改的时间';
+
+comment on column case_node.tplid is '使用的模板id';
+
+comment on column case_node.isfile is '是文件还是文件夹';
+
+comment on column case_node.parentid is '父级id';
+
+comment on column case_node.filecontent is '文件内容';
+
+comment on column case_node.casename is '节点名称';
+
+alter table case_node
+    owner to postgres;
+
