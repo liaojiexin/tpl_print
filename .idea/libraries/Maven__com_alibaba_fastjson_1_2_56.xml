@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.alibaba:fastjson:1.2.56">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/com/alibaba/fastjson/1.2.56/fastjson-1.2.56.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../idea/repository/com/alibaba/fastjson/1.2.56/fastjson-1.2.56.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/com/alibaba/fastjson/1.2.56/fastjson-1.2.56-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../idea/repository/com/alibaba/fastjson/1.2.56/fastjson-1.2.56-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../idea/IDEA2019.2/IntelliJ IDEA 2019.2/plugins/maven/repository/com/alibaba/fastjson/1.2.56/fastjson-1.2.56-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../idea/repository/com/alibaba/fastjson/1.2.56/fastjson-1.2.56-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

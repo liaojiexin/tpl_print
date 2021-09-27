@@ -145,7 +145,6 @@ public class CaseTplServiceImpl implements CaseTplService {
         Map<String, Object> results = new HashMap<>();
         LoopRowTableRenderPolicy policyRow = new LoopRowTableRenderPolicy();   //行循环
         LoopColumnTableRenderPolicy policyColumn = new LoopColumnTableRenderPolicy(); //列循环
-        Configure config = null;
         JSONObject jsonObject = JSONObject.parseObject(filecontent);
         for (Map.Entry<String, Object> key : jsonObject.entrySet()) {
             if (key.getValue().toString().startsWith("[")        //数据格式表示表单行循环

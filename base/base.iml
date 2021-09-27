@@ -25,6 +25,24 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-cache:2.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.9" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-redis:2.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-redis:2.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-keyvalue:2.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:2.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.9" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-oxm:5.3.9" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.9" level="project" />
+    <orderEntry type="library" name="Maven: io.lettuce:lettuce-core:6.1.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.67.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.67.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.67.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.67.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.67.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.67.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.4.9" level="project" />
+    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.5.4" level="project" />
@@ -74,7 +92,6 @@
     <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.52" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:5.3.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.3.9" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.9" level="project" />
     <orderEntry type="library" name="Maven: com.deepoove:poi-tl:1.10.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.12.0" level="project" />

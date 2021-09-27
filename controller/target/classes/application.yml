@@ -7,6 +7,16 @@ spring:
     url: jdbc:postgresql://172.26.40.160:5432/postgres
     username: postgres
     password: Chinadci.07
+  redis:
+    host: 172.26.40.160
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 8
+        min-idle: 0
+        max-wait: 6000
   #文件上传大小设置,springboot默认文件大小的限制是1MB,值可以使用后缀“MB”或“KB”.如果是想要不限制文件上传的大小，那么就把两个值都设置为-1
   servlet:
     multipart:
@@ -47,3 +57,5 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+

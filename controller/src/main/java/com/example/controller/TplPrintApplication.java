@@ -3,13 +3,10 @@ package com.example.controller;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 
-
+@EnableCaching  //开启缓存
 // 配置 spring 扫描的包
 @MapperScan(value = "com.example.dao.mapper")
 @EnableTransactionManagement        //启动事务
