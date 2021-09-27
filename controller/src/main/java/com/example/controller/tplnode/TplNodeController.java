@@ -114,9 +114,13 @@ public class TplNodeController {
     @ApiOperation("预览模板的pdf文件")
     @RequestMapping(value = "/tplNode/previewPdf",method = RequestMethod.GET)
     public void previewPdf(HttpServletResponse response,String tplid) throws Exception {
-        Map<String,Object> result=tplNodeService.previewPdf(response,tplid,filepath);
+        Map<String,Object> result=tplNodeService.previewPdf(tplid,filepath);
         if (result.get("result").toString().equals("success")){     //成功
-            response=(HttpServletResponse)result.get("response");
+            Map<String,Object> heads= (Map<String, Object>) result.get("heads");
+            //请求头
+            response.setContentType(String.valueOf(heads.get("Content-Type")));
+            response.setHeader("Content-Disposition", String.valueOf(heads.get("Content-Disposition")));
+            response.setContentLength((Integer) heads.get("Content-Length"));
             try (OutputStream outputStream=response.getOutputStream()){
                 byte[] bytes= (byte[]) result.get("bytes");
                 outputStream.write(bytes,0,bytes.length);

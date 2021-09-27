@@ -2,7 +2,6 @@ package com.example.service.tpl.impl;
 
 import com.example.base.pojo.PageParam;
 import com.example.base.pojo.TplNode;
-import com.example.base.utils.FileUtil;
 import com.example.base.utils.SnowflakeIdWorker;
 import com.example.dao.mapper.TplNodeMapper;
 import com.example.service.tpl.def.FileOperateService;
@@ -10,6 +9,7 @@ import com.example.service.tpl.def.TplNodeService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -130,8 +130,10 @@ public class TplNodeServiceImpl implements TplNodeService {
 
     //预览模板
     @Override
-    public Map<String,Object> previewPdf(HttpServletResponse response,String tplid ,String filepath) {
+    @Cacheable(value ="TplNodeServiceImpl",key = "#tplid",unless = "#result.get('result').toString().equals('convert')")
+    public Map<String,Object> previewPdf(String tplid ,String filepath) {
         Map<String,Object> result=new HashMap();
+        Map<String,Object> heads=new HashMap<>();
         TplNode tplNode=tplNodeMapper.selectByPrimaryKey(tplid);
         String filePath=tplNode.getFilepath().substring(0,tplNode.getFilepath().lastIndexOf("."))+".pdf";
         File file =new File(filePath);
@@ -146,12 +148,13 @@ public class TplNodeServiceImpl implements TplNodeService {
                 outputStream.flush();
                 byte[] bytes=outputStream.toByteArray();
                 //请求头处理
-                response.setContentType("application/pdf;charset=UTF-8");
+                heads.put("Content-Type","application/pdf;charset=UTF-8");
                 String filename= tplNode.getFilename().substring(0,tplNode.getFilename().lastIndexOf("."))+".pdf";
                 filename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
-                response.setHeader("Content-Disposition", String.format("inline; filename=%s",filename));
-                response.setContentLength(bytes.length);
-                result.put("response",response);
+                heads.put("Content-Disposition",String.format("inline; filename=%s",filename));
+                heads.put("Content-Length",bytes.length);
+
+                result.put("heads",heads);
                 result.put("bytes",bytes);
                 result.put("result","success");
             }catch (Exception e){
