@@ -9,6 +9,7 @@ import com.example.service.tpl.def.TplNodeService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,7 @@ public class TplNodeServiceImpl implements TplNodeService {
 
     //删除模板
     @Override
+    @CacheEvict(value = "TplNodeServiceImpl",key = "#tplNode.tplid")
     public void removeTplFile(String filepath,TplNode tplNode) {
         TplNode tpl=tplNodeMapper.selectByPrimaryKey(tplNode.getTplid());
         if (tplNodeMapper.deleteByPrimaryKey(tplNode.getTplid())==1){   //删除数据库成功
@@ -75,8 +77,8 @@ public class TplNodeServiceImpl implements TplNodeService {
 
     //修改模板
     @Override
+    @CacheEvict(value = "TplNodeServiceImpl",key = "#tplNode.tplid",condition = "#result==true")
     public Boolean updateTplFile(String filepath, TplNode tplNode, MultipartFile file) {
-        tplNode=tplNodeMapper.selectByPrimaryKey(tplNode.getTplid());
         if (file!=null && !file.isEmpty()){     //文件不为空，修改文件
             String originalFilename = file.getOriginalFilename();
             String fileName = tplNode.getTplid() + "-" + originalFilename;
