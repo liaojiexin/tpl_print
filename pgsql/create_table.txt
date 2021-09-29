@@ -36,6 +36,8 @@ comment on column tpl_node.filename is '文件名称';
 alter table tpl_node
     owner to postgres;
 
+--------------------------------------------
+
 create table case_node
 (
     caseid      varchar(255) not null
@@ -70,4 +72,32 @@ comment on column case_node.casename is '节点名称';
 
 alter table case_node
     owner to postgres;
+
+
+--------------------------------------------
+
+-- auto-generated definition
+create table tpl_user
+(
+    uid      varchar(255) not null
+        constraint tpl_user_pk
+            primary key,
+    username varchar(255),
+    password varchar(255),
+    uname    varchar(255)
+);
+
+comment on table tpl_user is '打印模板用户';
+
+comment on column tpl_user.uid is '用户id';
+
+comment on column tpl_user.username is '账号';
+
+comment on column tpl_user.password is '密码';
+
+comment on column tpl_user.uname is '用户名';
+
+alter table tpl_user
+    owner to postgres;
+
 
