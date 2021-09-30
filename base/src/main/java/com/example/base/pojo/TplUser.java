@@ -45,4 +45,6 @@ public class TplUser {
     public void setUname(String uname) {
         this.uname = uname == null ? null : uname.trim();
     }
+
+
 }
