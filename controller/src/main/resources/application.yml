@@ -58,12 +58,3 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
-# rsa配置
-rsa:
-  key:
-    privateKeyFile: D:\\test\\auth\\priKey.key
-    publicKeyFile: D:\\test\\auth\\pubKey.key
-    secret: (EMOK:)_$^11244^%$_(IS:)_@@++--(COOL:)_++++_.sds_(GUY:)
-
-
-
