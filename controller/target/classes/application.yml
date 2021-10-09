@@ -58,4 +58,12 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
+# rsa配置
+rsa:
+  key:
+    privateKeyFile: ${user.dir}\auth\jwt.p12
+    publicKeyFile: ${user.dir}\auth\pubKey.key
+    secret: (EMOK:)_$^11244^%$_(IS:)_@@++--(COOL:)_++++_.sds_(GUY:)
+
+
 

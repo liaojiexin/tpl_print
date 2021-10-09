@@ -17,8 +17,6 @@ import java.io.PrintWriter;
  * @Description: Denied是拒签的意思
  * 此处我们可以自定义403响应的内容,让他返回我们的错误逻辑提示
  **/
-
-
 public class MyAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse resp,

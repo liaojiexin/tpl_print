@@ -76,7 +76,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @Param: [http]
      * @return: void
      **/
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()

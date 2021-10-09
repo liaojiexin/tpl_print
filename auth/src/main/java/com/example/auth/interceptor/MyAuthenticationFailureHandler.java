@@ -19,7 +19,6 @@ import java.io.PrintWriter;
  * @Date: 2019/3/28-9:17
  * @Description: 认证失败的处理
  **/
-
 public class MyAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     @Override
