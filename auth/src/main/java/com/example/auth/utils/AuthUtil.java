@@ -1,4 +1,4 @@
-package com.example.base.utils;
+package com.example.auth.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 
 //拿到请求头的token来获取用户信息
-public class AuthUtils {
+public class AuthUtil {
 	public static String getReqUser(HttpServletRequest req) {
 		String header = req.getHeader("Authorization");
 		String token = StringUtils.substringAfter(header, "bearer");

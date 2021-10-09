@@ -14,4 +14,6 @@ public interface TplUserMapper {
     int updateByPrimaryKeySelective(TplUser record);
 
     int updateByPrimaryKey(TplUser record);
+
+    TplUser findUserByName(String username);
 }

@@ -1,4 +1,4 @@
-package com.example.base.interceptor;
+package com.example.auth.interceptor;
 
 import com.example.base.pojo.response.ResultBody;
 import com.example.base.pojo.response.ResultCode;

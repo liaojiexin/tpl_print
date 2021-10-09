@@ -1,4 +1,4 @@
-package com.example.base.config;
+package com.example.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import javax.annotation.Resource;
+
 //资源服务配置文件
 @Configuration
 @EnableResourceServer
@@ -23,7 +25,7 @@ public class ResourceConfiguration extends ResourceServerConfigurerAdapter {
  
 	private static final String SOURCE_ID = "order";
  
-	@Autowired
+	@Resource
 	private RedisConnectionFactory redisConnectionFactory;
  
 	@Override

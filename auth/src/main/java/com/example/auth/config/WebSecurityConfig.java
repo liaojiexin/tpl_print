@@ -1,11 +1,12 @@
-package com.example.base.config;
+package com.example.auth.config;
 
-import com.example.base.interceptor.MyAccessDeniedHandler;
-import com.example.base.interceptor.MyAuthenticationFailureHandler;
-import com.example.base.interceptor.MyAuthenticationSuccessHandler;
-import com.example.base.interceptor.MyLogoutSuccessHandler;
+import com.example.auth.interceptor.MyAccessDeniedHandler;
+import com.example.auth.interceptor.MyAuthenticationFailureHandler;
+import com.example.auth.interceptor.MyAuthenticationSuccessHandler;
+import com.example.auth.interceptor.MyLogoutSuccessHandler;
 import com.example.base.pojo.response.ResultBody;
 import com.example.base.pojo.response.ResultCode;
+import com.example.service.tpl.impl.TplUserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,10 +18,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +36,9 @@ import java.io.PrintWriter;
 @EnableGlobalMethodSecurity(prePostEnabled = true) //全局
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Resource
+    private UserDetailsService userDetailsService;
+
     /**
      * @Author: Galen
      * @Description: 配置userDetails的数据源，密码加密格式
@@ -42,28 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      **/
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(new UserDetailsService()).passwordEncoder(new BCryptPasswordEncoder());//新版必须加密
-    }
-
-    protected class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService{
-        /**
-         * 通过 Username 加载用户详情
-         * @param username 用户名
-         * @return UserDetails
-         * @throws UsernameNotFoundException
-         */
-        @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-/*            if (username.equals("linyuan")) {
-                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String password = passwordEncoder.encode("123456");
-                UserDetails userDetails = new TplUser("linyuan",
-                        password,
-                        AuthorityUtils.commaSeparatedStringToAuthorityList(AuthoritiesEnum.USER.getRole()));
-                return userDetails;
-            }*/
-            return null;
-        }
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());//新版必须加密
     }
 
     /**

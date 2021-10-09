@@ -2,9 +2,13 @@ package com.example.base.pojo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @ApiModel("用户")
-public class TplUser {
+public class TplUser{
     @ApiModelProperty("用户id")
     private String uid;
     @ApiModelProperty("账号")
@@ -46,5 +50,13 @@ public class TplUser {
         this.uname = uname == null ? null : uname.trim();
     }
 
-
+    @Override
+    public String toString() {
+        return "TplUser{" +
+                "uid='" + uid + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", uname='" + uname + '\'' +
+                '}';
+    }
 }
