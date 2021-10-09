@@ -11,6 +11,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
 
+//该类用于生成、验证、刷新token（签名使用RSA加密技术）
 @Component
 public class JwtTokenUtil {
 

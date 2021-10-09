@@ -76,7 +76,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!--   spring security+jwt   https://www.cnblogs.com/grimm/p/13518207.html  -->
+        <!--   spring security+jwt   https://blog.csdn.net/m0_53129012/article/details/110505770  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

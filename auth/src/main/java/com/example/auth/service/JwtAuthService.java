@@ -9,10 +9,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
+//Token颁发服务类
 @Service
 public class JwtAuthService {
 
-    @Autowired
+    @Resource
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -23,7 +26,7 @@ public class JwtAuthService {
 
     public String login(String username, String password) {
         // 用户验证
-        Authentication authentication = null;
+        Authentication authentication;
         try {
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

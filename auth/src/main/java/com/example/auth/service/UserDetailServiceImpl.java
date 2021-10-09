@@ -6,8 +6,6 @@ import com.example.dao.mapper.TplUserMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,8 +21,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (tplUser == null) {
             throw new RuntimeException("用户" + username + "不存在");
         }
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String password = passwordEncoder.encode(tplUser.getPassword());
         JwtUser jwtUser=new JwtUser(tplUser);
         return jwtUser;
     }
