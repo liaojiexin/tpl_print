@@ -24,6 +24,22 @@ public class JwtTokenUtil {
     @Value("${token.expiration}")
     private long expiration;
 
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public long getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(long expiration) {
+        this.expiration = expiration;
+    }
+
     /**
      * 生成token令牌
      * @param userDetails 用户
