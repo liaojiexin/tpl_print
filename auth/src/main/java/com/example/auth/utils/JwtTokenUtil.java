@@ -15,13 +15,10 @@ import java.util.*;
 @Component
 public class JwtTokenUtil {
 
-    @Value("${token.header}")
+    @Value("${jwt.token}")
     private String header;
 
-    //@Value("${token.secret}")
-    //private String secret;
-
-    @Value("${token.expiration}")
+    @Value("${jwt.expiration}")
     private long expiration;
 
     public String getHeader() {

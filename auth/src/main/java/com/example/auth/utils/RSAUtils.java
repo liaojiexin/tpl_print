@@ -1,4 +1,4 @@
-package com.example.auth.rsa;
+package com.example.auth.utils;
 
 import java.io.File;
 import java.io.IOException;
