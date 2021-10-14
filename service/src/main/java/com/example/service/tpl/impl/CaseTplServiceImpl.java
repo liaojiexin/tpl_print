@@ -192,7 +192,7 @@ public class CaseTplServiceImpl implements CaseTplService {
                 continue;
             } else {             //普通文本和图片
                 //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
-                results.put(key.getKey(), StringUtils.strip(key.getValue().toString(), "\u202a"));
+                results.put(key.getKey().replace("@",""), StringUtils.strip(key.getValue().toString(), "\u202a"));
                 continue;
             }
         }
