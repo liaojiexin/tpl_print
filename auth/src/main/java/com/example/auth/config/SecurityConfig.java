@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         System.out.println("JwtAuthenticationEntryPoint:"+authException.getMessage());
                         resp.sendError(HttpServletResponse.SC_UNAUTHORIZED,"没有凭证");
                     }
-                });;
+                });
 
         // 退出功能
         http.logout().logoutUrl("/tplprint/system/logout");

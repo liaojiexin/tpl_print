@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -125,16 +122,16 @@ public class CaseTplServiceImpl implements CaseTplService {
         ConfigureBuilder configureBuilder1 = (ConfigureBuilder) map.get("configureBuilder");
         Configure config = configureBuilder1.build();
 
+        XWPFTemplate xwpfTemplate;
+        if (config != null) {
+            xwpfTemplate = XWPFTemplate.compile(filepath, config).render(map);
+        } else {
+            xwpfTemplate = XWPFTemplate.compile(filepath).render(map);
+        }
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            XWPFTemplate xwpfTemplate;
-            if (config != null) {
-                xwpfTemplate = XWPFTemplate.compile(filepath, config).render(map);
-            } else {
-                xwpfTemplate = XWPFTemplate.compile(filepath).render(map);
-            }
             xwpfTemplate.write(outputStream);
             bytes = outputStream.toByteArray();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return bytes;
