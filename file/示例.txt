@@ -1,3 +1,6 @@
+word:http://deepoove.com/poi-tl/
+excel:http://easypoi.mydoc.io/
+
 {
 	"test": "test",
 	"row_title": [{
@@ -95,4 +98,32 @@
 		"hdje": "3000"
 	}],
 	"image": "‪C:\\Users\\admin\\Desktop\\image.jpg"
+}
+
+
+//图表
+{
+	"chart_test1": {
+		"chart_type": "chart_Multi",  //chart_Multi多系列图表，chart_Single单系列图表
+		"chart_charttile": "图标1",   //图标标题
+		"chart_property":[  //下标属性
+			"中文","英文"
+		],
+		"countries": [
+			15, 6
+		],
+		"speakers": [
+			223, 119
+		]
+	},
+    "chart_test2": {
+        "chart_type": "chart_Single",
+        "chart_charttile": "图表2",
+        "chart_property": [
+            "中文", "英文"
+        ],
+        "countries": [
+            9826675, 4445123
+        ]
+    }
 }
