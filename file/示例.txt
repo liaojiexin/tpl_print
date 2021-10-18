@@ -1,0 +1,129 @@
+word:http://deepoove.com/poi-tl/
+excel:http://easypoi.mydoc.io/
+
+{
+	"test": "test",
+	"row_title": [{
+		"title1": "测试标题1",
+		"title2": "测试标题2",
+		"title3": "测试标题3",
+		"title4": "测试标题4"
+	}, {
+		"title1": "测试标题1",
+		"title2": "测试标题2",
+		"title3": "测试标题3",
+		"title4": "测试标题4"
+	}, {
+		"title1": "测试标题1",
+		"title2": "测试标题2",
+		"title3": "测试标题3",
+		"title4": "测试标题4"
+	}],
+	"column_title": [{
+		"title1": "测试标题1",
+		"title2": "测试标题2",
+		"title3": "测试标题3",
+		"title4": "测试标题4"
+	}, {
+		"title1": "测试标题1",
+		"title2": "测试标题2",
+		"title3": "测试标题3",
+		"title4": "测试标题4"
+	}, {
+		"title1": "测试标题1",
+		"title2": "测试标题2",
+		"title3": "测试标题3",
+		"title4": "测试标题3"
+	}],
+	"@image": "‪C:\\Users\\admin\\Desktop\\image.png",
+	"+include": {
+		"oflocal": "890549239078191104",
+		"data": {
+			"row_title": [{
+				"title1": "测试标题1",
+				"title2": "测试标题2",
+				"title3": "测试标题3",
+				"title4": "测试标题4"
+			}, {
+				"title1": "测试标题1",
+				"title2": "测试标题2",
+				"title3": "测试标题3",
+				"title4": "测试标题4"
+			}, {
+				"title1": "测试标题1",
+				"title2": "测试标题2",
+				"title3": "测试标题3",
+				"title4": "测试标题4"
+			}]
+		}
+	},
+	"*numbering": ["aaa", "bbb"]
+}
+
+
+{
+	"date": "2014-12-25",
+	"money": "2000000.00",
+	"upperMoney": "贰佰万",
+	"company": "执笔潜行科技有限公司",
+	"bureau": "财政局",
+	"person": "JueYue",
+	"phone": "1879740****",
+	"maplist": [{
+		"id": "1",
+		"zijin": "1000",
+		"bianma": "A001",
+		"mingcheng": "设计",
+		"xiangmumingcheng": "1期",
+		"quancheng": "开源项目",
+		"sqje": "1000",
+		"hdje": "1000"
+	}, {
+		"id": "2",
+		"zijin": "2000",
+		"bianma": "A002",
+		"mingcheng": "设计",
+		"xiangmumingcheng": "2期",
+		"quancheng": "开源项目",
+		"sqje": "2000",
+		"hdje": "2000"
+	}, {
+		"id": "3",
+		"zijin": "3000",
+		"bianma": "A003",
+		"mingcheng": "设计",
+		"xiangmumingcheng": "3期",
+		"quancheng": "开源项目",
+		"sqje": "3000",
+		"hdje": "3000"
+	}],
+	"image": "‪C:\\Users\\admin\\Desktop\\image.jpg"
+}
+
+
+//图表
+{
+	"chart_test1": {
+		"chart_type": "chart_Multi",  //chart_Multi多系列图表，chart_Single单系列图表
+		"chart_charttile": "图标1",   //图标标题
+		"chart_property":[  //下标属性
+			"中文","英文"
+		],
+		"countries": [
+			15, 6
+		],
+		"speakers": [
+			223, 119
+		]
+	},
+    "chart_test2": {
+        "chart_type": "chart_Single",
+        "chart_charttile": "图表2",
+        "chart_property": [
+            "中文", "英文"
+        ],
+        "countries": [
+            9826675, 4445123
+        ]
+    }
+}

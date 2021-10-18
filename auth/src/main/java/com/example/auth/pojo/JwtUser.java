@@ -1,4 +1,4 @@
-package com.example.base.pojo;
+package com.example.auth.pojo;
 
 import com.example.base.pojo.TplUser;
 import org.springframework.security.core.GrantedAuthority;

@@ -61,9 +61,14 @@ pagehelper:
 # rsa配置
 rsa:
   key:
-    privateKeyFile: ${user.dir}\auth\jwt.p12
-    publicKeyFile: ${user.dir}\auth\pubKey.key
+    privateKeyFile: ${user.dir}\auth\key\priKey.key
+    publicKeyFile: ${user.dir}\auth\key\pubKey.key
     secret: (EMOK:)_$^11244^%$_(IS:)_@@++--(COOL:)_++++_.sds_(GUY:)
+# Jwt配置
+jwt:
+  expiration: 3600000
+  token: Authorization
+
 
 
 

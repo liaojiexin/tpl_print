@@ -17,6 +17,7 @@ import java.io.PrintWriter;
  * @Date: 2019/3/28-9:21
  * @Description: 注销登录处理
  **/
+
 public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override

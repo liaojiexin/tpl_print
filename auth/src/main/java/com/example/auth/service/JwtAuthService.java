@@ -2,7 +2,7 @@ package com.example.auth.service;
 
 import com.example.auth.rsa.RSAKeyProperties;
 import com.example.auth.utils.JwtTokenUtil;
-import com.example.base.pojo.JwtUser;
+import com.example.auth.pojo.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

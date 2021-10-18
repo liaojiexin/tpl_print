@@ -1,5 +1,6 @@
 package com.example.auth.rsa;
 
+import com.example.auth.utils.RSAUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

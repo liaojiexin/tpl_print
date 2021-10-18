@@ -1,14 +1,13 @@
 package com.example.service.tpl.impl;
 
-import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
-import com.deepoove.poi.data.Includes;
-import com.deepoove.poi.data.Numberings;
+import com.deepoove.poi.data.*;
 import com.deepoove.poi.plugin.table.LoopColumnTableRenderPolicy;
 import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
 import com.example.base.pojo.CaseNode;
@@ -21,16 +20,14 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
+import javassist.ClassPool;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -123,18 +120,18 @@ public class CaseTplServiceImpl implements CaseTplService {
         ConfigureBuilder configureBuilder = Configure.builder();
         Map<String, Object> map = manageMap(filecontent, configureBuilder);
         ConfigureBuilder configureBuilder1 = (ConfigureBuilder) map.get("configureBuilder");
-        Configure config = configureBuilder1.build();
 
+        XWPFTemplate xwpfTemplate;
+        if (configureBuilder1 != null) {
+            Configure config = configureBuilder1.build();
+            xwpfTemplate = XWPFTemplate.compile(filepath, config).render(map);
+        } else {
+            xwpfTemplate = XWPFTemplate.compile(filepath).render(map);
+        }
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            XWPFTemplate xwpfTemplate;
-            if (config != null) {
-                xwpfTemplate = XWPFTemplate.compile(filepath, config).render(map);
-            } else {
-                xwpfTemplate = XWPFTemplate.compile(filepath).render(map);
-            }
             xwpfTemplate.write(outputStream);
             bytes = outputStream.toByteArray();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return bytes;
@@ -180,6 +177,54 @@ public class CaseTplServiceImpl implements CaseTplService {
                 String[] strings = string.substring(2, string.length() - 2).split("\",\"");
                 results.put(key.getKey().substring(1), Numberings.create(strings));
                 continue;
+            } else if(key.getKey().startsWith("chart_")){   //图标 chart_开头
+                JSONObject json=JSONObject.parseObject(key.getValue().toString());
+                Map<String,Object> mapInclude = new HashMap();
+                String chart_type = null;
+                String chart_charttile = null;
+                String[] chart_property = null;
+                for (Map.Entry<String, Object> keyMap : json.entrySet()) {
+                    if (keyMap.getKey().equals("chart_type")) { //type关键字为图表类型，有多系列图标和单系列图表
+                        chart_type = String.valueOf(keyMap.getValue());
+                        continue;
+                    } else if (keyMap.getKey().equals("chart_charttile")) { //图表标题
+                        chart_charttile = String.valueOf(keyMap.getValue());
+                        continue;
+                    } else if (keyMap.getKey().equals("chart_property")) {  //图表下标
+                        chart_property=new String[((JSONArray)keyMap.getValue()).size()];
+                        chart_property=((JSONArray)keyMap.getValue()).toArray(chart_property);
+                        continue;
+                    } else
+                        mapInclude.put(keyMap.getKey(), keyMap.getValue());
+                }
+                if (chart_type.equals("chart_Multi")){  //多系列
+                    Charts.ChartMultis chartMultis=Charts.ofMultiSeries(chart_charttile, chart_property);
+                    for (Map.Entry<String, Object> keyMap :mapInclude.entrySet()){
+                        Double[] doubles=new Double[((JSONArray)keyMap.getValue()).size()];
+                        int i=0;
+                        for (Object o:(JSONArray)keyMap.getValue()){
+                            doubles[i]=Double.parseDouble(o.toString());
+                            i++;
+                        }
+                        chartMultis =chartMultis.addSeries(keyMap.getKey(),doubles);
+                    }
+                    ChartMultiSeriesRenderData chart = chartMultis.create();
+                    results.put(key.getKey(),chart);
+                }else if (chart_type.equals("chart_Single")){   //单系列
+                    Charts.ChartSingles chartSingle=Charts.ofSingleSeries(chart_charttile, chart_property);
+                    for (Map.Entry<String, Object> keyMap :mapInclude.entrySet()){
+                        Double[] doubles=new Double[((JSONArray)keyMap.getValue()).size()];
+                        int i=0;
+                        for (Object o:(JSONArray)keyMap.getValue()){
+                            doubles[i]=Double.parseDouble(o.toString());
+                            i++;
+                        }
+                        chartSingle =chartSingle.series(keyMap.getKey(),doubles);
+                    }
+                    ChartSingleSeriesRenderData pie=chartSingle.create();
+                    results.put(key.getKey(), pie);
+                }
+                continue;
             } else if (key.getKey().startsWith("+")) {    //嵌套打印 key开头+ oflocal默认为嵌套模板的id，data为嵌套模板的数据
                 JSONObject json = JSONObject.parseObject(key.getValue().toString());
                 HashMap mapInclude = new HashMap();
@@ -192,7 +237,7 @@ public class CaseTplServiceImpl implements CaseTplService {
                 continue;
             } else {             //普通文本和图片
                 //注意去掉控制字符\u202a https://blog.csdn.net/qq_27508477/article/details/100571942
-                results.put(key.getKey(), StringUtils.strip(key.getValue().toString(), "\u202a"));
+                results.put(key.getKey().replace("@",""), StringUtils.strip(key.getValue().toString(), "\u202a"));
                 continue;
             }
         }

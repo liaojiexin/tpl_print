@@ -1,6 +1,6 @@
 package com.example.auth.service;
 
-import com.example.base.pojo.JwtUser;
+import com.example.auth.pojo.JwtUser;
 import com.example.base.pojo.TplUser;
 import com.example.dao.mapper.TplUserMapper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class UserDetailServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     @Resource
     private TplUserMapper tplUserMapper;
 
