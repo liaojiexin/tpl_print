@@ -69,6 +69,4 @@ jwt:
   expiration: 3600000
   token: Authorization
 
-
-
-
+#rabbitmq 账户：rabbitmq 密码：Chinadci.07 hostname：rabbitmq
