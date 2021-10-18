@@ -58,3 +58,4 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
+#rabbitmq 账户：rabbitmq 密码：Chinadci.07 hostname：rabbitmq
