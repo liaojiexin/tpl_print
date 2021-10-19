@@ -13,7 +13,7 @@ public class PageParam {
     @ApiModelProperty("当前页数")
     private int pageNum;    //当前页数
     @ApiModelProperty("全部信息数")
-    private long allNum;     //全部多少条信息
+    private long total;     //全部多少条信息
     @ApiModelProperty("当前页内容")
     private List<?> content;    //数据模型
 
@@ -41,11 +41,11 @@ public class PageParam {
         this.pageNum = pageNum;
     }
 
-    public long getAllNum() {
-        return allNum;
+    public long getTotal() {
+        return total;
     }
 
-    public void setAllNum(long allNum) {
-        this.allNum = allNum;
+    public void setTotal(long total) {
+        this.total = total;
     }
 }

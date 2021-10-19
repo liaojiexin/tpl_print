@@ -1,6 +1,7 @@
 package com.example.controller.system;
 
 import com.example.auth.service.JwtAuthService;
+import com.example.base.pojo.PageParam;
 import com.example.base.pojo.TplUser;
 import com.example.base.pojo.response.ResultBody;
 import com.example.base.pojo.response.ResultCode;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Api(tags = "用户")
 @RestController
@@ -74,5 +77,17 @@ public class TplUserController {
             return new ResultBody.Builder(ResultCode.ERROR).message("注册失败").build();
         }
         return new ResultBody.Builder(ResultCode.SUCCESS).message("注册成功").build();
+    }
+
+    /**
+     * 查询所有用户
+     * @param pageParam
+     * @return
+     */
+    @ApiOperation("查询所有用户")
+    @RequestMapping(value = "/system/selectAllUser")
+    public ResultBody selectAllUser(PageParam pageParam){
+        pageParam=tplUserService.selectAllUser(pageParam);
+        return new ResultBody.Builder(ResultCode.SUCCESS).message("查询成功").body(pageParam).build();
     }
 }

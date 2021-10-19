@@ -123,7 +123,7 @@ public class TplNodeServiceImpl implements TplNodeService {
             List<TplNode> list=tplNodeMapper.selectTplAll();
             PageInfo pageInfo=new PageInfo(list);
             pageParam.setContent(pageInfo.getList());
-            pageParam.setAllNum(pageInfo.getTotal());
+            pageParam.setTotal(pageInfo.getTotal());
             return pageParam;
         }finally {
             PageHelper.clearPage();
