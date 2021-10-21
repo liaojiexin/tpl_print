@@ -9,6 +9,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,6 +20,9 @@ public class TplUserServiceImpl implements TplUserService {
 
     @Resource
     private TplUserMapper tplUserMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public int insertTplUser(TplUser tplUser) {
@@ -59,8 +63,10 @@ public class TplUserServiceImpl implements TplUserService {
             return "用户不存在";
         if (StringUtils.isNotBlank(tplUser.getUsername()) && tplUserMapper.findUserByName(tplUser.getUsername())!=null)
             return "用户名称已存在";
-        if (ObjectUtil.isExist(tplUser.getPassword(),tplUser.getOldpassword()) && !tplUser.getPassword().equals(tplUser1.getPassword()))
+        if (ObjectUtil.isExist(tplUser.getPassword(),tplUser.getOldpassword()) && !passwordEncoder.matches(tplUser.getOldpassword(),tplUser1.getPassword()))
             return "原密码错误";
+        if (StringUtils.isNotBlank(tplUser.getPassword()))
+            tplUser.setPassword(passwordEncoder.encode(tplUser.getPassword()));
         if (tplUserMapper.updateByPrimaryKeySelective(tplUser)==1)
             return "修改成功";
         return "修改失败";

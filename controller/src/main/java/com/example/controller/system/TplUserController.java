@@ -109,11 +109,7 @@ public class TplUserController {
      */
     @ApiOperation("修改用户")
     @RequestMapping(value = "/system/updateUser",method = RequestMethod.POST)
-    public ResultBody updateUser(TplUser tplUser){
-        if (ObjectUtil.isExist(tplUser.getPassword(),tplUser.getOldpassword())){    //密码加密
-            tplUser.setPassword(passwordEncoder.encode(tplUser.getPassword()));
-            tplUser.setOldpassword(passwordEncoder.encode(tplUser.getOldpassword()));
-        }
+    public ResultBody updateUser(@RequestBody TplUser tplUser){
         String result=tplUserService.updateUser(tplUser);
         if(result.equals("修改成功"))
             return new ResultBody.Builder(ResultCode.SUCCESS).message("修改成功").build();
