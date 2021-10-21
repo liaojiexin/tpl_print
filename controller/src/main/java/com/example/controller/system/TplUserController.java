@@ -13,10 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -89,5 +86,38 @@ public class TplUserController {
     public ResultBody selectAllUser(PageParam pageParam){
         pageParam=tplUserService.selectAllUser(pageParam);
         return new ResultBody.Builder(ResultCode.SUCCESS).message("查询成功").body(pageParam).build();
+    }
+
+    /**
+     * 删除用户
+     * @param uid
+     * @return
+     */
+    @ApiOperation("删除用户")
+    @RequestMapping(value = "/system/deleteUser",method = RequestMethod.POST)
+    public ResultBody deleteUser(String uid){
+        if (tplUserService.deleteUser(uid)==1)
+            return new ResultBody.Builder(ResultCode.SUCCESS).message("删除成功").build();
+        else
+            return new ResultBody.Builder(ResultCode.SUCCESS).message("删除失败").build();
+    }
+
+    /**
+     * 修改用户信息
+     * @param tplUser
+     * @return
+     */
+    @ApiOperation("修改用户")
+    @RequestMapping(value = "/system/updateUser",method = RequestMethod.POST)
+    public ResultBody updateUser(TplUser tplUser){
+        if (ObjectUtil.isExist(tplUser.getPassword(),tplUser.getOldpassword())){    //密码加密
+            tplUser.setPassword(passwordEncoder.encode(tplUser.getPassword()));
+            tplUser.setOldpassword(passwordEncoder.encode(tplUser.getOldpassword()));
+        }
+        String result=tplUserService.updateUser(tplUser);
+        if(result.equals("修改成功"))
+            return new ResultBody.Builder(ResultCode.SUCCESS).message("修改成功").build();
+        else
+            return new ResultBody.Builder(ResultCode.ERROR).message(result).build();
     }
 }

@@ -12,4 +12,8 @@ public interface TplUserService {
     boolean isExistUsername(String username);
 
     PageParam selectAllUser(PageParam pageParam);
+
+    int deleteUser(String uid);
+
+    String updateUser(TplUser tplUser);
 }
