@@ -151,12 +151,9 @@ public class CaseTplServiceImpl implements CaseTplService {
                 configureBuilder = configureBuilder.bind(key.getKey(), policyRow);
                 String s = String.valueOf(key.getValue());
                 List<String> lists= ObjectUtil.parseJson(s.substring(1,s.length()-1));
-//                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
-//                List<String> lists = Arrays.asList(ss);
                 List<Map> listMap = new ArrayList<>();
                 for (String list : lists) {
                     listMap.add(manageMap(list, configureBuilder));
-//                    listMap.add(manageMap("{" + list + "}", configureBuilder));
                 }
                 results.put("configureBuilder", configureBuilder);
                 results.put(key.getKey(), listMap);
@@ -167,13 +164,9 @@ public class CaseTplServiceImpl implements CaseTplService {
                 configureBuilder = configureBuilder.bind(key.getKey(), policyColumn);
                 String s = String.valueOf(key.getValue());
                 List<String> lists= ObjectUtil.parseJson(s.substring(1,s.length()-1));
-
-//                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
-//                List<String> lists = Arrays.asList(ss);
                 List<Map> listMap = new ArrayList<>();
                 for (String list : lists) {
                     listMap.add(manageMap(list, configureBuilder));
-//                    listMap.add(manageMap("{" + list + "}", configureBuilder));
                 }
                 results.put("configureBuilder", configureBuilder);
                 results.put(key.getKey(), listMap);
