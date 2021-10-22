@@ -12,6 +12,7 @@ import com.deepoove.poi.plugin.table.LoopColumnTableRenderPolicy;
 import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
 import com.example.base.pojo.CaseNode;
 import com.example.base.pojo.TplNode;
+import com.example.base.utils.ObjectUtil;
 import com.example.dao.mapper.CaseNodeMapper;
 import com.example.dao.mapper.TplNodeMapper;
 import com.example.service.tpl.def.CaseTplService;
@@ -149,11 +150,13 @@ public class CaseTplServiceImpl implements CaseTplService {
                     && key.getKey().startsWith("row_")) {    //row_开头为行循环表
                 configureBuilder = configureBuilder.bind(key.getKey(), policyRow);
                 String s = String.valueOf(key.getValue());
-                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
-                List<String> lists = Arrays.asList(ss);
+                List<String> lists= ObjectUtil.parseJson(s.substring(1,s.length()-1));
+//                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
+//                List<String> lists = Arrays.asList(ss);
                 List<Map> listMap = new ArrayList<>();
                 for (String list : lists) {
-                    listMap.add(manageMap("{" + list + "}", configureBuilder));
+                    listMap.add(manageMap(list, configureBuilder));
+//                    listMap.add(manageMap("{" + list + "}", configureBuilder));
                 }
                 results.put("configureBuilder", configureBuilder);
                 results.put(key.getKey(), listMap);
@@ -163,11 +166,14 @@ public class CaseTplServiceImpl implements CaseTplService {
                     && key.getKey().startsWith("column_")) {     //column_开头为列循环表
                 configureBuilder = configureBuilder.bind(key.getKey(), policyColumn);
                 String s = String.valueOf(key.getValue());
-                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
-                List<String> lists = Arrays.asList(ss);
+                List<String> lists= ObjectUtil.parseJson(s.substring(1,s.length()-1));
+
+//                String ss[] = s.substring(2, s.length() - 2).trim().split("},\\{");
+//                List<String> lists = Arrays.asList(ss);
                 List<Map> listMap = new ArrayList<>();
                 for (String list : lists) {
-                    listMap.add(manageMap("{" + list + "}", configureBuilder));
+                    listMap.add(manageMap(list, configureBuilder));
+//                    listMap.add(manageMap("{" + list + "}", configureBuilder));
                 }
                 results.put("configureBuilder", configureBuilder);
                 results.put(key.getKey(), listMap);
