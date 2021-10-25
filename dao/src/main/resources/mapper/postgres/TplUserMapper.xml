@@ -85,6 +85,7 @@
       uname = #{uname,jdbcType=VARCHAR}
     where uid = #{uid,jdbcType=VARCHAR}
   </update>
-
-
+  <select id="selectAllUser" resultType="com.example.base.pojo.TplUser">
+    select uid, username, uname from tpl_user
+  </select>
 </mapper>

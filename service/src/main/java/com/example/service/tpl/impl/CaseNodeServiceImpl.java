@@ -51,7 +51,7 @@ public class CaseNodeServiceImpl implements CaseNodeService {
             List<TplNode> list=caseNodeMapper.selectCaseAll();
             PageInfo pageInfo=new PageInfo(list);
             pageParam.setContent(pageInfo.getList());
-            pageParam.setAllNum(pageInfo.getTotal());
+            pageParam.setTotal(pageInfo.getTotal());
             return pageParam;
         }finally {
             PageHelper.clearPage();

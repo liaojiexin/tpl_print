@@ -15,6 +15,8 @@ public class TplUser{
     private String username;
     @ApiModelProperty("密码")
     private String password;
+    @ApiModelProperty("旧密码")
+    private String oldpassword;
     @ApiModelProperty("用户名")
     private String uname;
 
@@ -40,6 +42,14 @@ public class TplUser{
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public String getOldpassword() {
+        return oldpassword;
+    }
+
+    public void setOldpassword(String oldpassword) {
+        this.oldpassword = oldpassword;
     }
 
     public String getUname() {

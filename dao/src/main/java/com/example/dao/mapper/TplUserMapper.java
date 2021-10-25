@@ -2,6 +2,8 @@ package com.example.dao.mapper;
 
 import com.example.base.pojo.TplUser;
 
+import java.util.List;
+
 public interface TplUserMapper {
     int deleteByPrimaryKey(String uid);
 
@@ -16,4 +18,6 @@ public interface TplUserMapper {
     int updateByPrimaryKey(TplUser record);
 
     TplUser findUserByName(String username);
+
+    List<TplUser> selectAllUser();
 }
