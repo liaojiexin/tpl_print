@@ -61,7 +61,7 @@ public class TplUserController {
     @RequestMapping(value = "/system/register")
     public ResultBody register(@RequestBody TplUser tplUser){
         if (!ObjectUtil.isExist(tplUser.getPassword(),tplUser.getUsername(),tplUser.getUname())){
-            return new ResultBody.Builder(ResultCode.ERROR).message("注册失败").build();
+            return new ResultBody.Builder(ResultCode.ERROR).message("注册失败,缺少必传项").build();
         }
         if (tplUserService.isExistUsername(tplUser.getUsername())){
             return new ResultBody.Builder(ResultCode.ERROR).message("注册失败,账户已存在").build();
@@ -71,7 +71,7 @@ public class TplUserController {
         tplUser.setUid(uid);
         tplUser.setPassword(passwordEncoder.encode(tplUser.getPassword()));   //加密
         if (tplUserService.insertTplUser(tplUser)!=1){
-            return new ResultBody.Builder(ResultCode.ERROR).message("注册失败").build();
+            return new ResultBody.Builder(ResultCode.ERROR).message("注册失败，未知原因").build();
         }
         return new ResultBody.Builder(ResultCode.SUCCESS).message("注册成功").build();
     }
