@@ -9,6 +9,9 @@
         <option value="$PROJECT_DIR$/base/pom.xml" />
         <option value="$PROJECT_DIR$/service/pom.xml" />
         <option value="$PROJECT_DIR$/auth/pom.xml" />
+        <option value="$PROJECT_DIR$/rabbitmq/pom.xml" />
+        <option value="$PROJECT_DIR$/mq-provider/pom.xml" />
+        <option value="$PROJECT_DIR$/mq-consumer/pom.xml" />
       </list>
     </option>
   </component>

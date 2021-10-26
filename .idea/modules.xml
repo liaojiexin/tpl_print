@@ -6,6 +6,8 @@
       <module fileurl="file://$PROJECT_DIR$/base/base.iml" filepath="$PROJECT_DIR$/base/base.iml" />
       <module fileurl="file://$PROJECT_DIR$/controller/controller.iml" filepath="$PROJECT_DIR$/controller/controller.iml" />
       <module fileurl="file://$PROJECT_DIR$/dao/dao.iml" filepath="$PROJECT_DIR$/dao/dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mq-consumer/mq-consumer.iml" filepath="$PROJECT_DIR$/mq-consumer/mq-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mq-provider/mq-provider.iml" filepath="$PROJECT_DIR$/mq-provider/mq-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/service/service.iml" filepath="$PROJECT_DIR$/service/service.iml" />
       <module fileurl="file://$PROJECT_DIR$/tpl_print.iml" filepath="$PROJECT_DIR$/tpl_print.iml" />
     </modules>
