@@ -1,5 +1,6 @@
 package com.example.controller.system;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.auth.service.JwtAuthService;
 import com.example.base.pojo.PageParam;
 import com.example.base.pojo.TplUser;
@@ -10,12 +11,18 @@ import com.example.base.utils.SnowflakeIdWorker;
 import com.example.service.tpl.def.TplUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Api(tags = "用户")
 @RestController
@@ -29,6 +36,12 @@ public class TplUserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 登录
@@ -50,6 +63,37 @@ public class TplUserController {
     @RequestMapping(value = "/system/logout")
     public ResultBody logout(){
         return new ResultBody.Builder(ResultCode.SUCCESS).message("登出成功").build();
+    }
+
+    /**
+     * 注册时发送手机短信
+     * @param mobile 手机号
+     * @return
+     */
+    @ApiOperation("注册时发送手机短信")
+    @RequestMapping(value = "/system/sendMessages")
+    public ResultBody sendMessages(String mobile){
+        if (StringUtils.isNotBlank(mobile)){
+            //TODO 生成验证码
+            String checkcode = RandomStringUtils.randomNumeric(4);
+            //输出
+            System.out.println("验证码为:"+checkcode);
+            //使用阿里云发送短信
+            Map<String ,String> map = new HashMap<>();
+            map.put("mobile",mobile);
+            map.put("templateCode","SMS_23423423");
+            //根据短信模板中的参数进行
+            Map<String,String> 	mapParams = new HashMap<>();
+            mapParams.put("code",checkcode);
+            //根据短信的动态参数,进行解析
+            String templateJsonParse = JSONObject.toJSONString(mapParams);
+            map.put("templateJsonParse",templateJsonParse);
+            rabbitTemplate.convertAndSend("","itcast-sms",map);
+            //将redis存储5分钟
+            redisTemplate.opsForValue().set(mobile,checkcode,5, TimeUnit.MINUTES);
+            return new ResultBody.Builder(ResultCode.SUCCESS).message("短信发送成功").build();
+        }
+        return new ResultBody.Builder(ResultCode.ERROR).message("短信发送失败").build();
     }
 
     /**
