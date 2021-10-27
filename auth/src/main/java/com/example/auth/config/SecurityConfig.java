@@ -66,10 +66,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/tplprint/system/login","/tplprint/system/register","/tplprint/system/sendMessages").anonymous()
                 // 静态资源放行
                 .antMatchers(
-                        "/*.html",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
+                        "/tplprint/img/**",
+                        "/tplprint/*.html",
+                        "/tplprint/**/*.html",
+                        "/tplprint/**/*.css",
+                        "/tplprint/**/*.js"
                 ).permitAll()
                 // 除了上面所有请求全部需要鉴权认证
                 .anyRequest().authenticated()

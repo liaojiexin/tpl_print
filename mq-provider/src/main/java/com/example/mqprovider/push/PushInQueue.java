@@ -24,16 +24,10 @@ public class PushInQueue {
         String checkcode = RandomStringUtils.randomNumeric(4);
         //输出
         System.out.println("验证码为:"+checkcode);
-        //使用阿里云发送短信
+        //使用邮箱发送短信
         Map<String ,String> map = new HashMap<>();
         map.put("email",email);
-        map.put("templateCode","SMS_23423423");
-        //根据短信模板中的参数进行
-        Map<String,String> 	mapParams = new HashMap<>();
-        mapParams.put("code",checkcode);
-        //根据短信的动态参数,进行解析
-        String templateJsonParse = JSONObject.toJSONString(mapParams);
-        map.put("templateJsonParse",templateJsonParse);
+        map.put("code",checkcode);
         rabbitTemplate.convertAndSend("TestDirectExchange","TestDirectRouting",map);
         //将redis存储5分钟
         redisTemplate.opsForValue().set(email,checkcode,5, TimeUnit.MINUTES);
