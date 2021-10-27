@@ -61,19 +61,19 @@ public class TplUserController {
     }
 
     /**
-     * 注册时发送手机短信
-     * @param mobile 手机号
+     * 注册时发送邮箱验证码
+     * @param email 邮箱
      * @return
      */
-    @ApiOperation("注册时发送手机短信")
+    @ApiOperation("注册时发送邮箱验证码")
     @RequestMapping(value = "/system/sendMessages")
-    public ResultBody sendMessages(String mobile){
-        if (StringUtils.isNotBlank(mobile)){
+    public ResultBody sendMessages(String email){
+        if (StringUtils.isNotBlank(email)){
             PushInQueue pushInQueue=new PushInQueue();
-            if (pushInQueue.sendMessages(mobile))
-                return new ResultBody.Builder(ResultCode.SUCCESS).message("短信发送成功").build();
+            if (pushInQueue.sendMessages(email))
+                return new ResultBody.Builder(ResultCode.SUCCESS).message("邮件发送成功").build();
         }
-        return new ResultBody.Builder(ResultCode.ERROR).message("短信发送失败").build();
+        return new ResultBody.Builder(ResultCode.ERROR).message("邮件发送失败").build();
     }
 
     /**

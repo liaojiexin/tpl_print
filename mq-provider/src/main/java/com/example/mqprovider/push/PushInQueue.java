@@ -19,14 +19,14 @@ public class PushInQueue {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public boolean sendMessages(String mobile){
+    public boolean sendMessages(String email){
         //TODO 生成验证码
         String checkcode = RandomStringUtils.randomNumeric(4);
         //输出
         System.out.println("验证码为:"+checkcode);
         //使用阿里云发送短信
         Map<String ,String> map = new HashMap<>();
-        map.put("mobile",mobile);
+        map.put("email",email);
         map.put("templateCode","SMS_23423423");
         //根据短信模板中的参数进行
         Map<String,String> 	mapParams = new HashMap<>();
@@ -36,7 +36,7 @@ public class PushInQueue {
         map.put("templateJsonParse",templateJsonParse);
         rabbitTemplate.convertAndSend("TestDirectExchange","TestDirectRouting",map);
         //将redis存储5分钟
-        redisTemplate.opsForValue().set(mobile,checkcode,5, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(email,checkcode,5, TimeUnit.MINUTES);
         return true;
     }
 }
