@@ -12,3 +12,15 @@ spring:
     password: Chinadci.07
     #虚拟host 可以不设置,使用server默认host
     virtual-host: rabbitmq
+  #设置发送邮箱
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: xxxxxx@qq.com
+    password: xxxxxx
+    default-encoding: UTF-8
+    properties:
+      mail:
+        debug: true
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory

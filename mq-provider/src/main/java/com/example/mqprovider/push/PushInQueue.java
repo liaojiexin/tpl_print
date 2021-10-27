@@ -34,7 +34,7 @@ public class PushInQueue {
         //根据短信的动态参数,进行解析
         String templateJsonParse = JSONObject.toJSONString(mapParams);
         map.put("templateJsonParse",templateJsonParse);
-        rabbitTemplate.convertAndSend("","itcast-sms",map);
+        rabbitTemplate.convertAndSend("TestDirectExchange","TestDirectRouting",map);
         //将redis存储5分钟
         redisTemplate.opsForValue().set(mobile,checkcode,5, TimeUnit.MINUTES);
         return true;
