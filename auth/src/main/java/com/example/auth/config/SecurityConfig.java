@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 配置权限
                 .authorizeRequests()
                 // 登录Login和注册 验证码CaptchaImage 允许匿名访问
-                .antMatchers("/tplprint/system/login","/tplprint/system/register").anonymous()
+                .antMatchers("/tplprint/system/login","/tplprint/system/register","/tplprint/system/sendMessages").anonymous()
                 // 静态资源放行
                 .antMatchers(
                         "/*.html",

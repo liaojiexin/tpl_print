@@ -8,6 +8,7 @@ import com.example.base.pojo.response.ResultBody;
 import com.example.base.pojo.response.ResultCode;
 import com.example.base.utils.ObjectUtil;
 import com.example.base.utils.SnowflakeIdWorker;
+import com.example.mqprovider.push.PushInQueue;
 import com.example.service.tpl.def.TplUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,12 +37,6 @@ public class TplUserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     /**
      * 登录
@@ -74,24 +69,9 @@ public class TplUserController {
     @RequestMapping(value = "/system/sendMessages")
     public ResultBody sendMessages(String mobile){
         if (StringUtils.isNotBlank(mobile)){
-            //TODO 生成验证码
-            String checkcode = RandomStringUtils.randomNumeric(4);
-            //输出
-            System.out.println("验证码为:"+checkcode);
-            //使用阿里云发送短信
-            Map<String ,String> map = new HashMap<>();
-            map.put("mobile",mobile);
-            map.put("templateCode","SMS_23423423");
-            //根据短信模板中的参数进行
-            Map<String,String> 	mapParams = new HashMap<>();
-            mapParams.put("code",checkcode);
-            //根据短信的动态参数,进行解析
-            String templateJsonParse = JSONObject.toJSONString(mapParams);
-            map.put("templateJsonParse",templateJsonParse);
-            rabbitTemplate.convertAndSend("","itcast-sms",map);
-            //将redis存储5分钟
-            redisTemplate.opsForValue().set(mobile,checkcode,5, TimeUnit.MINUTES);
-            return new ResultBody.Builder(ResultCode.SUCCESS).message("短信发送成功").build();
+            PushInQueue pushInQueue=new PushInQueue();
+            if (pushInQueue.sendMessages(mobile))
+                return new ResultBody.Builder(ResultCode.SUCCESS).message("短信发送成功").build();
         }
         return new ResultBody.Builder(ResultCode.ERROR).message("短信发送失败").build();
     }

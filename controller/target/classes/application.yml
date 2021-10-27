@@ -35,6 +35,12 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   application:
     name: printTpl
+  #rabbitmq 账户：rabbitmq 密码：Chinadci.07 hostname：rabbitmq
+  rabbitmq:
+    host: 172.26.40.160
+    port: 5672
+    username: rabbitmq
+    password: Chinadci.07
 
 swagger:
   enable: true
@@ -68,5 +74,3 @@ rsa:
 jwt:
   expiration: 3600000
   token: Authorization
-
-#rabbitmq 账户：rabbitmq 密码：Chinadci.07 hostname：rabbitmq

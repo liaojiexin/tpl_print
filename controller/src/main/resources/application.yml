@@ -41,8 +41,6 @@ spring:
     port: 5672
     username: rabbitmq
     password: Chinadci.07
-    #虚拟host 可以不设置,使用server默认host
-    virtual-host: rabbitmq
 
 swagger:
   enable: true
