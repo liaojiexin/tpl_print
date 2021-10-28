@@ -12,13 +12,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import javax.annotation.Resource;
 import java.time.Duration;
 
 import static org.springframework.data.redis.cache.RedisCacheConfiguration.defaultCacheConfig;
 
 @Configuration
-public class CacheConfig extends CachingConfigurerSupport {
+public class CacheConfig extends CachingConfigurerSupport implements WebMvcConfigurer {
  
     @Resource
     private RedisConnectionFactory factory;
@@ -40,8 +42,8 @@ public class CacheConfig extends CachingConfigurerSupport {
     }
  
     @Bean
-    public RedisTemplate<Object, Object> redisTemplate() {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
         redisTemplate.setKeySerializer(genericJackson2JsonRedisSerializer);
